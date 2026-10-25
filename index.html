@@ -3,1262 +3,887 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="theme-color" content="#2b0a4e" />
-<title>曹林泽 · 夢核檔案</title>
+<meta name="theme-color" content="#0D0218" />
+<title>曹林泽 · 夢核網咖 2008</title>
 <script>document.documentElement.classList.add('js');</script>
 <style>
+  /* ============ 深夜霓虹网吧 · 极繁主义 ============ */
   :root {
-    --pink: #FF4FB8;
-    --pink-hot: #FF1E8E;
-    --cyan: #5FF5FF;
-    --yellow: #FFE94A;
-    --purple: #7B2BFF;
-    --deep: #150425;
-    --ink: #1B0326;
-    --text: #FFF2FB;
-    --muted: #D9B8E8;
-    --line: rgba(255, 255, 255, 0.22);
+    --pink: #FF4FB8; --pink-hot: #FF1E8E; --cyan: #4FF2FF; --yellow: #FFE94A;
+    --purple: #7B2BFF; --lime: #8CFF4F; --orange: #FF9E2C; --red: #FF3B3B;
+    --bg: #0D0218; --ink: #20063A; --text: #FFF3FC; --muted: #C9A0DC;
     --serif: "STZhongsong", "华文中宋", "Zhongsong", "Songti SC", "SimSun", "宋体", serif;
-    --nav-h: 68px;
+    --mono: "Courier New", monospace;
   }
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
   html { scroll-behavior: smooth; }
 
   body {
-    font-family: var(--serif);
-    color: var(--text);
-    background-color: #1a0330;
+    font-family: var(--serif); color: var(--text); line-height: 1.7; overflow-x: hidden;
+    background-color: var(--bg);
     background-image:
-      radial-gradient(circle at 14% 6%, rgba(255, 79, 184, 0.42), transparent 42%),
-      radial-gradient(circle at 86% 14%, rgba(95, 245, 255, 0.3), transparent 44%),
-      radial-gradient(circle at 50% 96%, rgba(255, 233, 74, 0.22), transparent 48%),
-      radial-gradient(circle at 78% 62%, rgba(123, 43, 255, 0.42), transparent 52%),
-      linear-gradient(160deg, #12021f 0%, #34095a 38%, #5c0d68 68%, #0b2350 100%);
+      radial-gradient(ellipse 60% 40% at 15% 0%, rgba(255,30,142,.28), transparent 60%),
+      radial-gradient(ellipse 50% 35% at 85% 6%, rgba(79,242,255,.18), transparent 62%),
+      radial-gradient(ellipse 45% 30% at 50% 22%, rgba(123,43,255,.3), transparent 65%),
+      radial-gradient(ellipse 40% 30% at 8% 48%, rgba(255,158,44,.16), transparent 60%),
+      radial-gradient(ellipse 45% 35% at 92% 60%, rgba(255,30,142,.2), transparent 62%),
+      radial-gradient(ellipse 50% 40% at 30% 85%, rgba(123,43,255,.25), transparent 65%),
+      radial-gradient(ellipse 40% 30% at 75% 96%, rgba(79,242,255,.14), transparent 60%),
+      linear-gradient(170deg, #1A0530 0%, #0D0218 30%, #150426 55%, #0A0114 80%, #06010E 100%);
     background-attachment: fixed;
-    line-height: 1.7;
-    overflow-x: hidden;
     cursor: url("assets/cursor.png") 48 48, auto;
   }
-
-  a, button, figure, .work, .portrait, .sticker, .music {
-    cursor: url("assets/cursor.png") 48 48, auto;
-  }
-
+  a, button, .work, .sticker, .side-box, .modal-bar, .portrait, .hang-tag { cursor: url("assets/cursor.png") 48 48, auto; }
   img { display: block; max-width: 100%; }
   a { color: inherit; text-decoration: none; }
   ul { list-style: none; }
+  button { font-family: inherit; }
+  ::selection { background: var(--yellow); color: var(--ink); }
+  ::-webkit-scrollbar { width: 14px; }
+  ::-webkit-scrollbar-track { background: #0D0218; }
+  ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--pink), var(--purple), var(--cyan)); border: 2px solid #0D0218; border-radius: 8px; }
 
-  ::selection { background: var(--pink); color: #fff; }
+  /* 噪点 / 扫描线 / 暗角 / 雾光 */
+  .fx-grain { position: fixed; inset: 0; z-index: 920; pointer-events: none; opacity: .32; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E"); }
+  .fx-scan { position: fixed; inset: 0; z-index: 910; pointer-events: none; opacity: .14;
+    background: repeating-linear-gradient(to bottom, rgba(0,0,0,.7) 0 1px, transparent 1px 3px); }
+  .fx-vignette { position: fixed; inset: 0; z-index: 900; pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 45%, rgba(5,0,12,.7) 100%); }
 
-  ::-webkit-scrollbar { width: 12px; }
-  ::-webkit-scrollbar-track { background: #120320; }
-  ::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, var(--pink), var(--purple), var(--cyan));
-    border: 2px solid #120320;
-    border-radius: 8px;
+  /* ============ 霓虹吊牌导航（非固定，挂在页面顶部） ============ */
+  .hang-nav { position: absolute; top: 0; left: 0; right: 0; z-index: 500;
+    display: flex; justify-content: center; gap: clamp(10px, 4vw, 60px); padding: 0 16px; pointer-events: none; }
+  .hang-tag { pointer-events: auto; display: flex; flex-direction: column; align-items: center;
+    transform-origin: top center; animation: sway ease-in-out infinite; }
+  .hang-tag .string { width: 2px; background: linear-gradient(to bottom, rgba(255,255,255,.15), currentColor); box-shadow: 0 0 6px currentColor; }
+  .hang-tag .tag {
+    font-size: clamp(13px, 1.4vw, 16px); letter-spacing: .2em; text-indent: .2em;
+    padding: 7px 16px 8px; border: 2px solid currentColor; border-radius: 6px 6px 14px 14px;
+    background: rgba(13,2,24,.85); color: currentColor;
+    box-shadow: 0 0 14px currentColor, inset 0 0 10px rgba(255,255,255,.08);
+    text-shadow: 0 0 8px currentColor;
+    transition: all .25s ease;
   }
+  .hang-tag:hover .tag { background: currentColor; color: #0D0218; text-shadow: none; box-shadow: 0 0 26px currentColor; }
+  .hang-tag.t1 { color: var(--pink); animation-duration: 3.8s; } .hang-tag.t1 .string { height: 34px; }
+  .hang-tag.t2 { color: var(--cyan); animation-duration: 4.6s; animation-delay: -1.2s; } .hang-tag.t2 .string { height: 62px; }
+  .hang-tag.t3 { color: var(--yellow); animation-duration: 4.1s; animation-delay: -2.4s; } .hang-tag.t3 .string { height: 46px; }
+  .hang-tag.t4 { color: var(--lime); animation-duration: 5s; animation-delay: -.7s; } .hang-tag.t4 .string { height: 72px; }
+  .hang-tag .brand-mini { margin-top: 8px; font-family: var(--mono); font-size: 9px; letter-spacing: .18em; opacity: .75; writing-mode: vertical-rl; }
 
-  /* ============ 背景星尘与扫描线 ============ */
-  .bg-stars {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    background-image:
-      radial-gradient(2px 2px at 24px 30px, rgba(255, 255, 255, 0.85), transparent 55%),
-      radial-gradient(2px 2px at 148px 96px, rgba(95, 245, 255, 0.9), transparent 55%),
-      radial-gradient(1.6px 1.6px at 232px 44px, rgba(255, 233, 74, 0.9), transparent 55%),
-      radial-gradient(2.4px 2.4px at 286px 178px, rgba(255, 79, 184, 0.85), transparent 55%),
-      radial-gradient(1.4px 1.4px at 88px 204px, rgba(255, 255, 255, 0.7), transparent 55%);
-    background-size: 320px 240px;
-    opacity: 0.55;
-    animation: twinkle 7s ease-in-out infinite alternate;
-  }
-
-  .bg-stars span {
-    position: fixed;
-    color: var(--yellow);
-    opacity: 0.65;
-    font-size: 18px;
-    text-shadow: 0 0 12px rgba(255, 233, 74, 0.9);
-    animation: drift 9s ease-in-out infinite;
-  }
-
-  .bg-stars span:nth-child(1) { left: 8%; top: 22%; animation-delay: -1s; }
-  .bg-stars span:nth-child(2) { right: 11%; top: 34%; color: var(--cyan); animation-delay: -3.5s; }
-  .bg-stars span:nth-child(3) { left: 16%; bottom: 18%; color: var(--pink); font-size: 24px; animation-delay: -5s; }
-  .bg-stars span:nth-child(4) { right: 18%; bottom: 26%; font-size: 13px; animation-delay: -2s; }
-
-  .scanlines {
-    position: fixed;
-    inset: 0;
-    z-index: 900;
-    pointer-events: none;
-    opacity: 0.16;
-    background: repeating-linear-gradient(
-      to bottom,
-      rgba(0, 0, 0, 0.55) 0px,
-      rgba(0, 0, 0, 0.55) 1px,
-      transparent 1px,
-      transparent 3px
-    );
-  }
-
-  .vignette {
-    position: fixed;
-    inset: 0;
-    z-index: 890;
-    pointer-events: none;
-    background: radial-gradient(ellipse at center, transparent 52%, rgba(10, 1, 20, 0.55) 100%);
-  }
-
-  /* ============ 导航 ============ */
-  .nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: var(--nav-h);
-    z-index: 500;
-    background: linear-gradient(180deg, rgba(24, 4, 44, 0.94), rgba(58, 10, 84, 0.86));
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
-    border-bottom: 2px solid rgba(255, 233, 74, 0.8);
-    box-shadow: 0 4px 26px rgba(255, 79, 184, 0.32);
-  }
-
-  .nav::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -4px;
-    height: 2px;
-    background: linear-gradient(90deg, var(--pink), var(--purple), var(--cyan), var(--yellow), var(--pink));
-    background-size: 300% 100%;
-    animation: rainbow 9s linear infinite;
-  }
-
-  .nav-inner {
-    max-width: 1240px;
-    margin: 0 auto;
-    height: 100%;
-    padding: 0 28px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-  }
-
-  .brand {
-    font-size: 14px;
-    letter-spacing: 0.16em;
-    white-space: nowrap;
-    color: #fff;
-    text-shadow: 0 0 10px rgba(255, 79, 184, 0.95), 0 0 22px rgba(123, 43, 255, 0.8);
-  }
-
-  .brand b {
-    color: var(--yellow);
-    font-weight: 400;
-    text-shadow: 0 0 10px rgba(255, 233, 74, 0.9);
-  }
-
-  .nav-links { display: flex; gap: 8px; }
-
-  .nav-links a {
-    position: relative;
-    font-size: 13px;
-    letter-spacing: 0.16em;
-    color: var(--muted);
-    padding: 7px 14px;
-    border: 1px solid transparent;
-    border-radius: 999px;
-    transition: color 0.35s ease, background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
-  }
-
-  .nav-links a:hover {
-    color: #fff;
-    border-color: rgba(255, 233, 74, 0.7);
-    background: rgba(255, 79, 184, 0.16);
-    box-shadow: 0 0 14px rgba(255, 79, 184, 0.5);
-  }
-
-  .nav-links a.active {
-    color: var(--ink);
-    border-color: #fff;
-    background: linear-gradient(180deg, var(--yellow), #ffb03a);
-    box-shadow: 0 0 18px rgba(255, 233, 74, 0.65);
-  }
+  /* ============ HUD ============ */
+  .hud { position: fixed; left: 10px; bottom: 10px; z-index: 590; font-family: var(--mono);
+    font-size: 10px; letter-spacing: .08em; color: rgba(255,243,252,.6);
+    text-shadow: 1px 1px 0 rgba(0,0,0,.8); pointer-events: none; line-height: 1.6; }
+  .hud .crosshair { color: var(--yellow); }
 
   /* ============ 首屏 ============ */
   .hero {
-    position: relative;
-    z-index: 1;
-    min-height: 100vh;
-    min-height: 100svh;
-    padding: calc(var(--nav-h) + 34px) 24px 96px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    overflow: hidden;
+    position: relative; min-height: 100vh; min-height: 100svh; z-index: 1;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 150px 20px 110px; overflow: hidden;
   }
+  /* 远处霓虹光斑 */
+  .hero::before { content: ""; position: absolute; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(circle at 20% 75%, rgba(255,30,142,.22), transparent 30%),
+      radial-gradient(circle at 80% 80%, rgba(79,242,255,.16), transparent 32%),
+      radial-gradient(circle at 50% 100%, rgba(255,233,74,.1), transparent 40%); }
+  .deco-star { position: absolute; z-index: 1; pointer-events: none; user-select: none;
+    animation: spin-star linear infinite; text-shadow: 0 0 16px currentColor; }
+  .deco-star.s1 { left: 9%; top: 22%; font-size: 54px; color: var(--yellow); animation-duration: 9s; }
+  .deco-star.s2 { right: 8%; top: 20%; font-size: 38px; color: var(--cyan); animation-duration: 12s; animation-direction: reverse; }
+  .deco-star.s3 { left: 15%; bottom: 15%; font-size: 44px; color: var(--pink); animation-duration: 10s; }
+  .deco-star.s4 { right: 13%; bottom: 30%; font-size: 30px; color: var(--lime); animation-duration: 7s; animation-direction: reverse; }
+  .deco-kaomoji { position: absolute; z-index: 1; font-size: 17px; letter-spacing: .1em; pointer-events: none; user-select: none;
+    text-shadow: 2px 2px 0 rgba(0,0,0,.6); animation: floaty2 6s ease-in-out infinite; }
+  .deco-kaomoji.k1 { left: 24%; top: 18%; color: var(--orange); }
+  .deco-kaomoji.k2 { right: 22%; top: 62%; color: var(--cyan); animation-delay: -2s; }
+  .deco-kaomoji.k3 { left: 6%; top: 58%; color: var(--lime); animation-delay: -4s; }
 
-  .hero-ghost {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(-7deg);
-    font-size: min(42vw, 560px);
-    line-height: 1;
-    color: transparent;
-    -webkit-text-stroke: 1px rgba(95, 245, 255, 0.14);
-    pointer-events: none;
-    z-index: 0;
-    user-select: none;
-  }
+  .hero-tag-row { position: relative; z-index: 2; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 24px; }
+  .hero-chip { font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em; padding: 4px 12px;
+    border: 2px solid; box-shadow: 0 0 12px currentColor, 2px 2px 0 rgba(0,0,0,.6); background: rgba(13,2,24,.8); }
+  .hero-chip.c1 { color: var(--yellow); border-color: var(--yellow); transform: rotate(-2deg); }
+  .hero-chip.c2 { color: var(--cyan); border-color: var(--cyan); transform: rotate(1.5deg); animation: blink 1.6s steps(1) infinite; }
+  .hero-chip.c3 { color: var(--lime); border-color: var(--lime); transform: rotate(-1deg); }
+  .hero-chip.c4 { color: var(--orange); border-color: var(--orange); transform: rotate(2deg); }
 
-  .hero-eyebrow {
-    position: relative;
-    z-index: 2;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 12px;
-    letter-spacing: 0.3em;
-    text-indent: 0.3em;
-    color: var(--cyan);
-    border: 1px dashed rgba(95, 245, 255, 0.6);
-    background: rgba(10, 2, 24, 0.4);
-    padding: 7px 18px;
-    border-radius: 999px;
-    text-shadow: 0 0 10px rgba(95, 245, 255, 0.8);
-    margin-bottom: clamp(26px, 4vh, 44px);
-  }
-
-  .hero-eyebrow i {
-    display: inline-block;
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--yellow);
-    box-shadow: 0 0 10px var(--yellow);
-    animation: blink 1.4s steps(1) infinite;
-  }
-
+  /* 名字：霓虹灯管 */
+  .hero-name-wrap { position: relative; z-index: 2; padding: 12px 28px; }
+  .hero-name-wrap::before, .hero-name-wrap::after { content: ""; position: absolute; left: 0; right: 0; height: 5px; border-radius: 3px;
+    background: linear-gradient(90deg, var(--pink), var(--yellow), var(--lime), var(--cyan), var(--purple), var(--pink));
+    background-size: 300% 100%; animation: rainbow-slide 8s linear infinite;
+    box-shadow: 0 0 16px rgba(255,79,184,.8); }
+  .hero-name-wrap::before { top: 0; } .hero-name-wrap::after { bottom: 0; }
   .hero-name {
     position: relative;
-    z-index: 2;
-    font-size: clamp(62px, 15vw, 212px);
-    font-weight: 700;
-    line-height: 0.98;
-    letter-spacing: 0.1em;
-    text-indent: 0.1em;
-    white-space: nowrap;
-    background-image: linear-gradient(
-      180deg,
-      #ffffff 0%,
-      #ffd9f4 18%,
-      #ff8fd8 38%,
-      #b48cff 52%,
-      #7fe9ff 66%,
-      #fff59b 82%,
-      #ffffff 100%
-    );
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-    filter:
-      drop-shadow(0 0 22px rgba(255, 79, 184, 0.8))
-      drop-shadow(0 7px 0 rgba(16, 3, 26, 0.75));
+    font-size: clamp(58px, 14.5vw, 200px); font-weight: 700; line-height: .98;
+    letter-spacing: .1em; text-indent: .1em; white-space: nowrap;
+    background-image: linear-gradient(180deg, #fff 0%, #FFD9F4 20%, #FF8FD8 42%, #B48CFF 62%, #7FE9FF 82%, #fff 100%);
+    background-size: 100% 280%; animation: nameSheen 6s ease-in-out infinite;
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
+    filter: drop-shadow(0 0 26px rgba(255,79,184,.95)) drop-shadow(0 0 60px rgba(123,43,255,.6));
   }
+  @keyframes nameSheen { 0%, 100% { background-position: 50% 0%; } 50% { background-position: 50% 100%; } }
+  .hero-name .hn-char { display: inline-flex; flex-direction: column; align-items: center; justify-content: flex-end; }
+  .hero-name .hn-char i { font-style: normal; font-size: .13em; font-weight: 700; letter-spacing: .42em; text-indent: .42em; line-height: 1;
+    margin-bottom: .1em; -webkit-text-fill-color: #8FF2FF; color: #8FF2FF; opacity: .95;
+    text-shadow: 0 0 10px rgba(79,242,255,.85); }
+  .hero-name .hn-tm { font-size: .15em; vertical-align: super; letter-spacing: 0; text-indent: 0;
+    -webkit-text-fill-color: var(--yellow); color: var(--yellow); text-shadow: 0 0 12px rgba(255,233,74,.9); }
+  .hero-name-en { position: relative; z-index: 2; margin-top: 16px;
+    font-size: clamp(11px, 1.3vw, 16px); letter-spacing: .48em; text-indent: .48em; white-space: nowrap;
+    color: #C9B8FF; opacity: .9; text-shadow: 0 0 12px rgba(176,63,255,.8); }
+  .hero-name .glitch { position: absolute; inset: 0; pointer-events: none;
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    background-image: linear-gradient(180deg, var(--cyan), var(--lime)); opacity: 0; mix-blend-mode: screen; }
+  .hero-name:hover .glitch.g-r { opacity: .85; animation: glitch-r .35s steps(2) infinite; }
+  .hero-name:hover .glitch.g-b { opacity: .85; animation: glitch-b .42s steps(2) infinite; background-image: linear-gradient(180deg, var(--pink-hot), var(--red)); }
 
-  .hero-sub-box {
-    position: relative;
-    z-index: 2;
-    margin-top: clamp(28px, 4vh, 46px);
-    padding: 12px 30px;
-    border: 1px solid rgba(95, 245, 255, 0.55);
-    background: rgba(20, 4, 38, 0.55);
-    box-shadow: 0 0 0 4px rgba(255, 79, 184, 0.14), inset 0 0 22px rgba(123, 43, 255, 0.35);
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
-  }
+  .hero-sub-box { position: relative; z-index: 2; margin-top: 32px;
+    background: rgba(13,2,24,.9); border: 3px double var(--cyan);
+    padding: 10px 28px; box-shadow: 0 0 20px rgba(79,242,255,.35), 4px 4px 0 rgba(0,0,0,.6);
+    transform: rotate(-.8deg); }
+  .hero-sub { font-size: clamp(14px, 1.8vw, 21px); letter-spacing: .14em; color: #fff; min-height: 1.7em; text-shadow: 0 0 12px rgba(123,43,255,.9); }
+  .hero-sub .caret { display: inline-block; width: .55em; height: 1.05em; vertical-align: -.15em; background: var(--yellow); margin-left: 2px; animation: blink 1s steps(1) infinite; box-shadow: 0 0 8px var(--yellow); }
 
-  .hero-sub {
-    font-size: clamp(15px, 1.7vw, 22px);
-    letter-spacing: 0.18em;
-    text-indent: 0.18em;
-    color: #fff;
-    text-shadow: 2px 2px 0 rgba(123, 43, 255, 0.9), -1px -1px 0 rgba(255, 79, 184, 0.8);
-  }
+  .hero-mini-ticker { position: relative; z-index: 2; margin-top: 28px; width: min(680px, 86vw);
+    border: 2px dashed rgba(255,233,74,.6); background: rgba(255,30,142,.15);
+    overflow: hidden; white-space: nowrap; padding: 5px 0; transform: rotate(.6deg); }
+  .hero-mini-ticker .ticker-track span { font-size: 11.5px; color: var(--yellow); text-shadow: 0 0 8px rgba(255,233,74,.6); }
 
-  .hero-scroll {
-    position: absolute;
-    z-index: 2;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    font-size: 11px;
-    letter-spacing: 0.28em;
-    text-indent: 0.28em;
-    color: rgba(255, 242, 251, 0.7);
-  }
+  /* 首屏挂件 */
+  .hero-widgets { position: absolute; z-index: 3; left: 22px; top: 130px; display: flex; flex-direction: column; gap: 12px; width: 152px; }
+  .widget { background: rgba(13,2,24,.85); border: 2px solid; padding: 8px 10px; text-align: left;
+    box-shadow: 0 0 14px rgba(0,0,0,.6), 3px 3px 0 rgba(0,0,0,.5); font-size: 11px; letter-spacing: .06em; }
+  .widget .w-title { font-family: var(--mono); font-size: 9px; letter-spacing: .18em; margin-bottom: 4px; }
+  .widget.w1 { border-color: var(--cyan); transform: rotate(-2.5deg); box-shadow: 0 0 12px rgba(79,242,255,.3); } .widget.w1 .w-title { color: var(--cyan); }
+  .widget.w2 { border-color: var(--yellow); transform: rotate(2deg); box-shadow: 0 0 12px rgba(255,233,74,.25); } .widget.w2 .w-title { color: var(--yellow); }
+  .widget.w3 { border-color: var(--pink); transform: rotate(-1.5deg); box-shadow: 0 0 12px rgba(255,79,184,.3); } .widget.w3 .w-title { color: var(--pink); }
+  .widget .big { font-family: var(--mono); font-size: 15px; color: #fff; text-shadow: 0 0 8px rgba(255,255,255,.5); }
 
-  .hero-scroll i {
-    display: block;
-    width: 1px;
-    height: 46px;
-    background: linear-gradient(to bottom, var(--cyan), transparent);
-    animation: scroll-line 2.2s ease-in-out infinite;
-  }
+  .hero-side-deco { position: absolute; z-index: 3; right: 22px; top: 140px; display: flex; flex-direction: column; gap: 12px; align-items: flex-end; }
+  .qq-badge { font-size: 12px; letter-spacing: .1em; padding: 5px 12px; border: 2px solid; background: rgba(13,2,24,.85);
+    box-shadow: 0 0 12px currentColor; }
+  .qq-badge.q1 { color: var(--pink); border-color: var(--pink); transform: rotate(3deg); }
+  .qq-badge.q2 { color: var(--cyan); border-color: var(--cyan); transform: rotate(-2.5deg); }
+  .qq-badge.q3 { color: var(--yellow); border-color: var(--yellow); transform: rotate(2deg); animation: blink 2s steps(1) infinite; }
 
-  .hero-note {
-    position: absolute;
-    bottom: 30px;
-    z-index: 2;
-    font-size: 10.5px;
-    letter-spacing: 0.16em;
-    color: rgba(255, 242, 251, 0.55);
-  }
-
-  .hero-note.left { left: 30px; }
-  .hero-note.right { right: 30px; color: rgba(255, 233, 74, 0.75); }
+  .press-start { position: relative; z-index: 2; margin-top: 36px; font-family: var(--mono); font-size: 13px;
+    letter-spacing: .34em; text-indent: .34em; color: var(--yellow); text-shadow: 0 0 12px rgba(255,233,74,.9);
+    animation: blink 1.3s steps(1) infinite; }
+  .hero-scroll { position: absolute; z-index: 2; bottom: 24px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    font-size: 11px; letter-spacing: .26em; text-indent: .26em; color: rgba(255,243,252,.8); text-shadow: 1px 1px 0 rgba(0,0,0,.7); }
+  .hero-scroll i { display: block; width: 2px; height: 38px; background: linear-gradient(to bottom, var(--yellow), transparent); animation: scroll-line 2.2s ease-in-out infinite; box-shadow: 0 0 8px rgba(255,233,74,.6); }
+  .hero-note { position: absolute; bottom: 24px; z-index: 2; font-family: var(--mono); font-size: 10px; letter-spacing: .12em; color: rgba(255,243,252,.5); }
+  .hero-note.left { left: 24px; } .hero-note.right { right: 24px; }
 
   /* 头像贴纸 */
-  .hero-sticker {
-    --rot: -10deg;
-    position: absolute;
-    z-index: 2;
-    width: clamp(96px, 11vw, 140px);
-    transform: rotate(var(--rot));
-    animation: floaty 8s ease-in-out infinite;
-  }
+  .sticker { --rot: -9deg; position: absolute; z-index: 4; width: clamp(88px, 10vw, 124px);
+    transform: rotate(var(--rot)); animation: floaty 7s ease-in-out infinite; user-select: none; }
+  .sticker.a { left: 17%; top: 36%; }
+  .sticker.b { right: 15%; bottom: 24%; --rot: 8deg; animation-delay: -3.2s; }
+  .sticker .disc { width: 100%; aspect-ratio: 1; border-radius: 50%; overflow: hidden;
+    border: 4px solid rgba(255,255,255,.9); background: radial-gradient(circle at 50% 35%, #FFE9FF, #FFC6EC 60%, #FF8FD8);
+    box-shadow: 0 0 0 4px var(--pink), 0 0 26px rgba(255,79,184,.9), 4px 5px 0 rgba(0,0,0,.55);
+    transition: transform .3s ease; }
+  .sticker:hover .disc { transform: scale(1.08) rotate(3deg); }
+  .sticker .disc img { width: 100%; height: 100%; object-fit: contain; }
+  .sticker .tag { position: absolute; left: 50%; bottom: -13px; transform: translateX(-50%);
+    background: var(--yellow); color: var(--ink); font-size: 10.5px; letter-spacing: .08em;
+    padding: 2px 8px; border: 2px solid var(--ink); white-space: nowrap; box-shadow: 0 0 12px rgba(255,233,74,.7), 2px 2px 0 rgba(0,0,0,.5); }
+  .sticker.bounce .disc { animation: pop .45s ease; }
+  .quote-bubble { position: absolute; z-index: 6; left: 50%; top: -14px; transform: translate(-50%, -100%);
+    background: #fff; color: var(--ink); font-size: 13px; letter-spacing: .05em;
+    padding: 6px 12px; border: 2px solid var(--ink); white-space: nowrap;
+    box-shadow: 3px 3px 0 rgba(0,0,0,.5); animation: bubble-in .25s ease; }
+  .quote-bubble::after { content: ""; position: absolute; left: 50%; bottom: -8px; transform: translateX(-50%);
+    border: 5px solid transparent; border-top-color: var(--ink); }
 
-  .hero-sticker.a { left: 6%; top: 24%; }
-  .hero-sticker.b { right: 5%; bottom: 22%; --rot: 8deg; animation-delay: -3.4s; }
+  /* ============ 主跑马灯 ============ */
+  .ticker { position: relative; z-index: 2; border-top: 2px solid var(--pink); border-bottom: 2px solid var(--cyan);
+    background: linear-gradient(90deg, rgba(255,30,142,.35), rgba(123,43,255,.35) 30%, rgba(0,168,232,.3) 60%, rgba(255,158,44,.3));
+    overflow: hidden; white-space: nowrap; padding: 8px 0; box-shadow: 0 0 20px rgba(255,30,142,.25); }
+  .ticker-track { display: inline-flex; animation: marquee 30s linear infinite; will-change: transform; }
+  .ticker-track span { font-size: 13px; letter-spacing: .24em; color: #fff; padding: 0 16px; font-weight: 700; text-shadow: 0 0 10px rgba(255,79,184,.8), 2px 2px 0 rgba(0,0,0,.6); }
 
-  .hero-sticker .disc {
-    width: 100%;
-    aspect-ratio: 1;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 4px solid #fff;
-    background: radial-gradient(circle at 50% 35%, #ffe9ff, #ffc6ec 60%, #ff8fd8);
-    box-shadow:
-      0 0 0 4px var(--pink),
-      0 0 24px rgba(255, 79, 184, 0.8),
-      0 12px 26px rgba(0, 0, 0, 0.5);
-  }
+  /* ============ 门户布局 ============ */
+  .portal { position: relative; z-index: 1; max-width: 1260px; margin: 0 auto;
+    display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 26px; padding: 40px 22px 0; }
 
-  .hero-sticker .disc img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
+  .sidebar { position: sticky; top: 20px; align-self: start; display: flex; flex-direction: column; gap: 18px; }
+  .side-box { padding: 12px; font-size: 13px; color: #fff; position: relative; }
+  .side-box.b1 { background: rgba(255,30,142,.14); border: 2px solid var(--pink); border-radius: 18px 4px 18px 4px; transform: rotate(-1.4deg); box-shadow: 0 0 18px rgba(255,30,142,.25); }
+  .side-box.b2 { background: rgba(79,242,255,.08); border: 2px dashed var(--cyan); border-radius: 4px 20px 4px 20px; transform: rotate(1.6deg); box-shadow: 0 0 18px rgba(79,242,255,.18); }
+  .side-box.b3 { background: rgba(255,158,44,.1); border: 2px solid var(--orange); border-radius: 24px; transform: rotate(-1.8deg); box-shadow: 0 0 18px rgba(255,158,44,.2); }
+  .side-box.b4 { background: rgba(140,255,79,.08); border: 2px dotted var(--lime); border-radius: 6px; transform: rotate(1.1deg); box-shadow: 0 0 16px rgba(140,255,79,.15); }
+  .side-box.b5 { background: rgba(123,43,255,.16); border: 2px solid var(--purple); border-radius: 20px 20px 4px 4px; transform: rotate(-1deg); box-shadow: 0 0 18px rgba(123,43,255,.3); }
+  .side-box.b6 { background: rgba(255,233,74,.07); border: 2px dashed var(--yellow); border-radius: 4px 4px 22px 22px; transform: rotate(1.5deg); box-shadow: 0 0 16px rgba(255,233,74,.15); }
+  .side-title { font-family: var(--mono); font-size: 10.5px; letter-spacing: .18em;
+    border-bottom: 1px dashed rgba(255,255,255,.4); padding-bottom: 6px; margin-bottom: 10px; text-shadow: 0 0 8px currentColor; }
+  .side-box.b1 .side-title { color: var(--pink); } .side-box.b2 .side-title { color: var(--cyan); }
+  .side-box.b3 .side-title { color: var(--orange); } .side-box.b4 .side-title { color: var(--lime); }
+  .side-box.b5 .side-title { color: #C9A0FF; } .side-box.b6 .side-title { color: var(--yellow); }
+  .site-card { text-align: center; }
+  .site-card .avatar { width: 84px; height: 84px; margin: 4px auto 10px; border-radius: 50%; overflow: hidden;
+    border: 3px solid rgba(255,255,255,.85); background: radial-gradient(circle at 50% 35%, #FFE9FF, #FF8FD8);
+    box-shadow: 0 0 18px rgba(255,79,184,.9); animation: floaty2 5s ease-in-out infinite; }
+  .site-card .avatar img { width: 100%; height: 100%; object-fit: contain; }
+  .site-card .name { font-size: 15px; letter-spacing: .12em; text-shadow: 0 0 10px rgba(255,79,184,.8); }
+  .site-card .sub { font-family: var(--mono); font-size: 9.5px; color: rgba(255,255,255,.75); margin-top: 4px; letter-spacing: .08em; }
+  .side-nav a { display: block; padding: 7px 10px; margin: 6px 0; font-size: 13px; letter-spacing: .14em;
+    border: 1px dashed rgba(255,255,255,.35); border-radius: 12px; background: rgba(0,0,0,.2); transition: all .2s ease; text-shadow: 1px 1px 0 rgba(0,0,0,.6); }
+  .side-nav a:nth-child(odd) { border-radius: 4px; transform: rotate(-.6deg); }
+  .side-nav a:nth-child(even) { transform: rotate(.5deg); margin-left: 8px; }
+  .side-nav a::before { content: "▸ "; color: var(--yellow); }
+  .side-nav a:nth-child(odd)::before { content: "★ "; color: var(--cyan); }
+  .side-nav a:hover { background: rgba(255,255,255,.18); transform: translateX(5px) rotate(-1.2deg); border-color: var(--yellow); }
+  .counter-box { text-align: center; font-family: var(--mono); }
+  .counter-box .num { font-size: 20px; color: var(--orange); letter-spacing: .2em; text-shadow: 0 0 12px rgba(255,158,44,.9); animation: blink 2.4s steps(1) infinite; }
+  .counter-box small { display: block; font-size: 9.5px; color: rgba(255,255,255,.75); margin-top: 4px; }
+  .side-btn { width: 100%; padding: 8px 0; font-size: 12px; letter-spacing: .14em; color: #fff; border-radius: 14px;
+    background: rgba(0,0,0,.3); border: 1px solid var(--lime); transition: all .2s ease; }
+  .side-btn:hover { color: var(--lime); box-shadow: 0 0 12px rgba(140,255,79,.4); }
+  .tip-box { font-family: var(--mono); font-size: 10px; line-height: 1.9; letter-spacing: .06em; }
+  .tip-box b { color: var(--yellow); font-weight: 400; }
+  .friend-links a { display: inline-block; margin: 3px 4px 3px 0; font-size: 11px; padding: 2px 9px; border-radius: 12px;
+    border: 1px dashed rgba(255,255,255,.5); background: rgba(0,0,0,.25); }
+  .friend-links a:nth-child(odd) { transform: rotate(-1deg); }
+  .friend-links a:hover { background: var(--yellow); color: var(--ink); box-shadow: 0 0 12px rgba(255,233,74,.6); }
 
-  .hero-sticker .tag {
-    position: absolute;
-    left: 50%;
-    bottom: -14px;
-    transform: translateX(-50%) rotate(calc(var(--rot) * -0.5));
-    background: var(--yellow);
-    color: var(--ink);
-    font-size: 10.5px;
-    letter-spacing: 0.1em;
-    padding: 2px 9px;
-    border: 1px solid var(--ink);
-    white-space: nowrap;
-    box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.4);
-  }
+  /* 内容窗口：不规则异形 */
+  .window { margin-bottom: 40px; scroll-margin-top: 20px; position: relative; }
+  .window.w-about { background: linear-gradient(155deg, rgba(61,10,110,.85), rgba(13,2,24,.92));
+    border: 2px solid var(--purple); border-radius: 30px 6px 30px 6px; transform: rotate(-.5deg); box-shadow: 0 0 30px rgba(123,43,255,.3), 6px 6px 0 rgba(0,0,0,.4); }
+  .window.w-works { background: linear-gradient(205deg, rgba(10,40,80,.88), rgba(13,2,24,.94));
+    border: 2px dashed var(--cyan); border-radius: 6px 34px 6px 34px; transform: rotate(.6deg); box-shadow: 0 0 30px rgba(79,242,255,.2), -6px 6px 0 rgba(0,0,0,.4); }
+  .window.w-ex { background: linear-gradient(155deg, rgba(110,10,60,.85), rgba(13,2,24,.92));
+    border: 2px solid var(--pink); border-radius: 40px 40px 10px 10px; transform: rotate(-.6deg); box-shadow: 0 0 30px rgba(255,30,142,.25), 6px 6px 0 rgba(0,0,0,.4); }
+  .window.w-gb { background: linear-gradient(195deg, rgba(110,60,10,.8), rgba(40,4,60,.92));
+    border: 2px dotted var(--orange); border-radius: 10px 10px 36px 36px; transform: rotate(.5deg); box-shadow: 0 0 30px rgba(255,158,44,.2), -6px 6px 0 rgba(0,0,0,.4); }
+  .win-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 14px;
+    border-bottom: 1px dashed rgba(255,255,255,.3);
+    font-family: var(--mono); font-size: 11px; letter-spacing: .14em; color: rgba(255,255,255,.85); text-shadow: 1px 1px 0 rgba(0,0,0,.7); }
+  .win-bar .dots { display: flex; gap: 5px; }
+  .win-bar .dots i { width: 11px; height: 11px; display: block; border-radius: 50%; box-shadow: 0 0 8px currentColor; }
+  .win-bar .dots i:nth-child(1) { background: var(--yellow); color: var(--yellow); }
+  .win-bar .dots i:nth-child(2) { background: var(--cyan); color: var(--cyan); }
+  .win-bar .dots i:nth-child(3) { background: var(--red); color: var(--red); }
+  .win-body { padding: clamp(20px, 3vw, 40px); }
 
-  /* ============ 跑马灯 ============ */
-  .ticker {
-    position: relative;
-    z-index: 2;
-    border-top: 2px solid var(--yellow);
-    border-bottom: 2px solid var(--yellow);
-    background: linear-gradient(90deg, var(--pink-hot), var(--purple) 34%, #00a8e8 68%, var(--yellow));
-    overflow: hidden;
-    white-space: nowrap;
-    padding: 9px 0;
-  }
+  .sec-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+    border-bottom: 2px dashed rgba(255,255,255,.3); padding-bottom: 14px; margin-bottom: 30px; }
+  .sec-num { font-family: var(--mono); font-size: 11px; color: var(--ink); background: var(--yellow);
+    border-radius: 50%; width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 12px rgba(255,233,74,.7); }
+  .sec-title { position: relative; font-size: clamp(22px, 2.9vw, 34px); font-weight: 400; letter-spacing: .12em;
+    color: #fff; text-shadow: 0 0 14px rgba(255,79,184,.9), 3px 3px 0 rgba(0,0,0,.6); }
+  .sec-title .glitch-t { position: absolute; inset: 0; color: var(--cyan); opacity: 0; pointer-events: none; }
+  .sec-head:hover .glitch-t { opacity: .8; animation: glitch-r .4s steps(2) infinite; }
+  .sec-note { margin-left: auto; font-family: var(--mono); font-size: 10px; letter-spacing: .12em; color: rgba(255,255,255,.65); }
 
-  .ticker-track {
-    display: inline-flex;
-    animation: marquee 34s linear infinite;
-    will-change: transform;
-  }
+  /* 关于我 */
+  .about-grid { display: grid; grid-template-columns: 5fr 7fr; gap: clamp(24px, 4vw, 52px); align-items: start; }
+  .portrait { position: relative; padding: 10px 10px 46px;
+    background: linear-gradient(160deg, #fff, #FFE3F4); border: 3px solid var(--pink); border-radius: 4px;
+    box-shadow: 0 0 26px rgba(255,79,184,.5), 6px 6px 0 rgba(0,0,0,.45);
+    transform: rotate(-2.6deg); transition: transform .5s cubic-bezier(.16,.7,.2,1); }
+  .portrait:hover { transform: rotate(0deg) scale(1.02); }
+  .portrait::before, .portrait::after { content: ""; position: absolute; top: -13px; width: 60px; height: 24px;
+    background: rgba(79,242,255,.5); border: 1px solid rgba(255,255,255,.6); box-shadow: 0 2px 6px rgba(0,0,0,.4); }
+  .portrait::before { left: -16px; transform: rotate(-38deg); }
+  .portrait::after { right: -16px; transform: rotate(38deg); background: rgba(255,233,74,.55); }
+  .portrait .frame { overflow: hidden; aspect-ratio: 3/4; background: #E8D8FF; }
+  .portrait img { width: 100%; height: 100%; object-fit: cover; filter: saturate(1.1) contrast(1.05);
+    transition: transform 1.4s cubic-bezier(.16,.7,.2,1); }
+  .portrait:hover img { transform: scale(1.06); }
+  .portrait figcaption { position: absolute; left: 0; right: 0; bottom: 13px; text-align: center;
+    font-size: 12px; letter-spacing: .14em; color: #6A1B9A; }
+  .owner-badge { position: absolute; right: -16px; bottom: 40px; transform: rotate(6deg);
+    background: var(--red); color: #fff; font-size: 11px; letter-spacing: .08em;
+    padding: 3px 10px; border: 2px solid #fff; border-radius: 12px; box-shadow: 0 0 14px rgba(255,59,59,.7); animation: blink 2.8s steps(1) infinite; }
+  .about-text p { font-size: 15.5px; line-height: 2.05; color: #FFF3FC; margin-bottom: 16px; text-align: justify; text-shadow: 1px 1px 0 rgba(0,0,0,.5); }
+  .quote-line { margin: 24px 0 28px; padding: 12px 18px; border-left: 5px solid var(--yellow); border-radius: 0 16px 16px 0;
+    background: rgba(255,233,74,.1); font-size: 17px; letter-spacing: .1em; color: var(--yellow);
+    text-shadow: 0 0 12px rgba(255,233,74,.6); transform: rotate(-.6deg); }
+  .facts { border-top: 2px dashed rgba(255,255,255,.3); }
+  .facts div { display: grid; grid-template-columns: 84px 1fr; gap: 14px; padding: 9px 0;
+    border-bottom: 1px dashed rgba(255,255,255,.22); font-size: 13px; letter-spacing: .06em; }
+  .facts dt { color: var(--cyan); font-family: var(--mono); letter-spacing: .12em; }
+  .facts dd { color: #FFF3FC; }
 
-  .ticker-track span {
-    font-size: 13px;
-    letter-spacing: 0.26em;
-    color: var(--ink);
-    padding: 0 16px;
-    font-weight: 700;
-  }
+  /* 作品画廊 */
+  .works-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(16px, 2.2vw, 30px); }
+  .work { position: relative; background: rgba(13,2,24,.9); padding: 8px;
+    transition: transform .35s ease, box-shadow .35s ease; }
+  .work:nth-child(1) { transform: rotate(-1.6deg); border: 2px solid var(--pink); border-radius: 20px 4px 20px 4px; }
+  .work:nth-child(2) { transform: rotate(1.1deg) translateY(12px); border: 2px dashed var(--cyan); border-radius: 4px 20px 4px 20px; }
+  .work:nth-child(3) { transform: rotate(-.9deg); border: 2px solid var(--yellow); border-radius: 24px 24px 4px 4px; }
+  .work:nth-child(4) { transform: rotate(1.4deg) translateY(-8px); border: 2px dotted var(--lime); border-radius: 4px 4px 24px 24px; }
+  .work:nth-child(5) { transform: rotate(-1.2deg) translateY(10px); border: 2px solid var(--purple); border-radius: 18px 18px 18px 4px; }
+  .work:nth-child(6) { transform: rotate(.9deg); border: 2px dashed var(--orange); border-radius: 4px 22px 22px 22px; }
+  .work:hover { transform: rotate(0deg) translateY(-6px) scale(1.03); box-shadow: 0 0 0 2px var(--yellow), 0 0 30px rgba(255,233,74,.5); z-index: 3; }
+  .work-media { overflow: hidden; aspect-ratio: 1/1; background: #0D0218; position: relative; border-radius: inherit; }
+  .work-media img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.85) contrast(1.02);
+    transition: filter .9s ease, transform 1.6s cubic-bezier(.16,.7,.2,1); will-change: transform; }
+  .work:hover .work-media img { filter: saturate(1.3) contrast(1.08); transform: scale(1.1); }
+  .work-caption { padding: 10px 2px 2px; }
+  .work-caption h3 { font-size: 15px; font-weight: 400; letter-spacing: .12em; color: #fff; text-shadow: 0 0 12px rgba(255,79,184,.8); }
+  .work-caption p { margin-top: 4px; font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
+  .work .loc { position: absolute; top: 14px; left: 14px; z-index: 2;
+    background: rgba(13,2,24,.85); border: 1px solid var(--cyan); border-radius: 10px; color: var(--cyan);
+    font-family: var(--mono); font-size: 10px; letter-spacing: .1em; padding: 2px 7px; box-shadow: 0 0 10px rgba(79,242,255,.4); }
+  .work .click-hint { position: absolute; top: 14px; right: 14px; z-index: 2;
+    background: var(--yellow); color: var(--ink); font-family: var(--mono); font-size: 9.5px;
+    padding: 1px 6px; border: 1px solid var(--ink); border-radius: 8px; opacity: 0; transition: opacity .3s ease; }
+  .work:hover .click-hint { opacity: 1; animation: blink 1s steps(1) infinite; }
 
-  /* ============ 板块与窗口 ============ */
-  .section {
-    position: relative;
-    z-index: 1;
-    max-width: 1240px;
-    margin: 0 auto;
-    padding: 86px 28px 0;
-    scroll-margin-top: calc(var(--nav-h) + 18px);
-  }
+  /* 作品弹窗 */
+  .modal-win { position: fixed; z-index: 800; width: min(420px, 86vw);
+    background: linear-gradient(160deg, rgba(61,10,110,.97), rgba(13,2,24,.97));
+    border: 2px solid var(--pink); border-radius: 20px 20px 6px 6px;
+    box-shadow: 0 0 34px rgba(255,79,184,.5), 8px 8px 0 rgba(0,0,0,.55); }
+  .modal-bar { display: flex; align-items: center; justify-content: space-between; padding: 7px 12px;
+    border-bottom: 1px dashed rgba(255,255,255,.35); border-radius: 18px 18px 0 0;
+    background: linear-gradient(90deg, rgba(255,30,142,.5), rgba(123,43,255,.5), rgba(0,168,232,.4));
+    font-family: var(--mono); font-size: 11px; letter-spacing: .14em; color: #fff;
+    user-select: none; touch-action: none; text-shadow: 1px 1px 0 rgba(0,0,0,.7); }
+  .modal-close { background: var(--red); color: #fff; border: 1px solid #fff; border-radius: 50%;
+    width: 20px; height: 20px; line-height: 15px; font-size: 13px; text-align: center; padding: 0; box-shadow: 0 0 10px rgba(255,59,59,.7); }
+  .modal-body { padding: 12px; }
+  .modal-body img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border: 2px solid var(--yellow); border-radius: 8px; box-shadow: 0 0 16px rgba(255,233,74,.3); }
+  .modal-info { margin-top: 10px; font-size: 13px; letter-spacing: .06em; }
+  .modal-info h4 { font-weight: 400; letter-spacing: .12em; color: var(--yellow); text-shadow: 0 0 10px rgba(255,233,74,.6); }
+  .modal-info p { font-family: var(--mono); font-size: 10.5px; color: var(--muted); margin-top: 4px; line-height: 1.8; }
 
-  .window {
-    border: 2px solid rgba(255, 233, 74, 0.85);
-    border-radius: 12px;
-    background: linear-gradient(160deg, rgba(33, 8, 58, 0.9), rgba(16, 3, 34, 0.92));
-    box-shadow:
-      0 0 0 3px rgba(255, 79, 184, 0.32),
-      0 0 46px rgba(123, 43, 255, 0.38),
-      10px 10px 0 rgba(0, 0, 0, 0.32);
-    overflow: hidden;
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
-  }
+  /* 展览经历 */
+  .ex-list { border-top: 2px dashed rgba(255,255,255,.3); }
+  .ex-row { display: grid; grid-template-columns: 92px 1fr auto; gap: 18px; align-items: baseline;
+    padding: 14px 12px; border-bottom: 1px dashed rgba(255,255,255,.25); transition: all .3s ease; }
+  .ex-row:nth-child(odd) { transform: rotate(-.4deg); }
+  .ex-row:nth-child(even) { transform: rotate(.4deg); margin-left: 6px; }
+  .ex-row:hover { background: linear-gradient(90deg, rgba(255,233,74,.15), rgba(79,242,255,.08), transparent); transform: translateX(6px) rotate(0deg); border-radius: 12px; }
+  .ex-year { font-family: var(--mono); font-size: 15px; letter-spacing: .08em; color: var(--yellow); text-shadow: 0 0 12px rgba(255,233,74,.7); }
+  .ex-title { font-size: 15.5px; letter-spacing: .08em; color: #fff; }
+  .ex-type { display: inline-block; margin-left: 8px; font-family: var(--mono); font-size: 9.5px;
+    color: var(--lime); border: 1px solid rgba(140,255,79,.7); border-radius: 8px; padding: 1px 6px; vertical-align: 2px; }
+  .ex-venue { font-size: 12px; letter-spacing: .06em; color: var(--muted); text-align: right; }
 
-  .win-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 14px;
-    padding: 8px 14px;
-    background: linear-gradient(90deg, #ff4fb8 0%, #c22bff 32%, #4f8cff 64%, #5ff5ff 100%);
-    border-bottom: 2px solid rgba(255, 233, 74, 0.85);
-    color: var(--ink);
-    font-size: 12px;
-    letter-spacing: 0.16em;
-    font-weight: 700;
-  }
+  /* 留言板 */
+  .gb-form { display: grid; gap: 10px; margin-bottom: 26px; }
+  .gb-form input, .gb-form textarea { width: 100%; font-family: var(--serif); font-size: 14px;
+    background: rgba(13,2,24,.9); color: #fff; border: 2px solid rgba(255,255,255,.4); border-radius: 12px;
+    padding: 9px 12px; outline: none; resize: vertical; transition: all .25s ease; }
+  .gb-form input:focus, .gb-form textarea:focus { border-color: var(--yellow); box-shadow: 0 0 14px rgba(255,233,74,.5); }
+  .gb-form input { max-width: 260px; transform: rotate(-.5deg); }
+  .gb-form textarea { transform: rotate(.3deg); }
+  .gb-submit { align-self: start; padding: 8px 26px; font-size: 13px; letter-spacing: .2em; text-indent: .2em;
+    background: linear-gradient(180deg, var(--yellow), var(--orange)); color: var(--ink);
+    border: 2px solid #fff; border-radius: 20px; box-shadow: 0 0 16px rgba(255,158,44,.6), 3px 3px 0 rgba(0,0,0,.45); transform: rotate(-1deg); }
+  .gb-submit:hover { filter: brightness(1.15); transform: rotate(0deg) scale(1.04); }
+  .gb-list { display: flex; flex-direction: column; gap: 12px; max-height: 340px; overflow-y: auto; padding-right: 6px; }
+  .gb-item { background: rgba(13,2,24,.75); border: 2px dashed rgba(255,255,255,.35); padding: 10px 14px; font-size: 13.5px; }
+  .gb-item:nth-child(odd) { transform: rotate(-.5deg); border-radius: 16px 4px 16px 4px; }
+  .gb-item:nth-child(even) { transform: rotate(.5deg); border-radius: 4px 16px 4px 16px; }
+  .gb-item .gb-meta { font-family: var(--mono); font-size: 10px; color: rgba(255,255,255,.7); margin-bottom: 4px; }
+  .gb-item .gb-name { font-weight: 700; margin-right: 8px; }
+  .gb-empty { font-family: var(--mono); font-size: 11px; color: rgba(255,255,255,.7); }
 
-  .win-bar span:last-child { letter-spacing: 0.1em; opacity: 0.8; }
-
-  .win-dots { display: flex; gap: 6px; align-items: center; }
-
-  .win-dots i {
-    display: block;
-    width: 11px;
-    height: 11px;
-    background: var(--yellow);
-    border: 1px solid var(--ink);
-    box-shadow: inset -2px -2px 0 rgba(0, 0, 0, 0.28);
-  }
-
-  .win-dots i:nth-child(2) { background: var(--cyan); }
-  .win-dots i:nth-child(3) { background: var(--pink-hot); }
-
-  .win-body { padding: clamp(24px, 3.4vw, 48px); }
-
-  .sec-head {
-    display: flex;
-    align-items: flex-end;
-    gap: 18px;
-    padding-bottom: 18px;
-    margin-bottom: 38px;
-    border-bottom: 1px dashed var(--line);
-  }
-
-  .sec-num {
-    font-size: 11.5px;
-    letter-spacing: 0.2em;
-    color: var(--cyan);
-    border: 1px solid rgba(95, 245, 255, 0.55);
-    padding: 2px 9px;
-    border-radius: 999px;
-    text-shadow: 0 0 8px rgba(95, 245, 255, 0.6);
-    white-space: nowrap;
-  }
-
-  .sec-title {
-    font-size: clamp(25px, 3.1vw, 38px);
-    font-weight: 400;
-    letter-spacing: 0.12em;
-    color: #fff;
-    text-shadow: 0 0 16px rgba(255, 79, 184, 0.85), 0 3px 0 rgba(0, 0, 0, 0.55);
-  }
-
-  .sec-note {
-    margin-left: auto;
-    font-size: 11px;
-    letter-spacing: 0.18em;
-    color: var(--muted);
-    white-space: nowrap;
-  }
-
-  /* ============ 关于 ============ */
-  .about-grid {
-    display: grid;
-    grid-template-columns: 5fr 7fr;
-    gap: clamp(30px, 4.6vw, 64px);
-    align-items: start;
-  }
-
-  .portrait {
-    position: relative;
-    padding: 12px 12px 56px;
-    background: linear-gradient(160deg, #ffffff, #e8d8ff);
-    border: 2px solid var(--pink);
-    box-shadow: 8px 8px 0 rgba(255, 79, 184, 0.35), 0 0 26px rgba(255, 79, 184, 0.3);
-    transform: rotate(-1.8deg);
-    transition: transform 0.6s cubic-bezier(0.16, 0.7, 0.2, 1);
-  }
-
-  .portrait:hover { transform: rotate(0deg) scale(1.015); }
-
-  .portrait::before,
-  .portrait::after {
-    content: "";
-    position: absolute;
-    top: -12px;
-    width: 58px;
-    height: 22px;
-    background: rgba(255, 233, 74, 0.62);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
-  }
-
-  .portrait::before { left: -14px; transform: rotate(-38deg); }
-  .portrait::after { right: -14px; transform: rotate(38deg); }
-
-  .portrait .frame { overflow: hidden; aspect-ratio: 3 / 4; background: #d9c9ff; }
-
-  .portrait img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: saturate(1.06) contrast(1.02);
-    transition: transform 1.6s cubic-bezier(0.16, 0.7, 0.2, 1);
-  }
-
-  .portrait:hover img { transform: scale(1.05); }
-
-  .portrait figcaption {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 15px;
-    text-align: center;
-    font-size: 12px;
-    letter-spacing: 0.16em;
-    color: #4a0f63;
-  }
-
-  .owner-badge {
-    position: absolute;
-    right: -18px;
-    bottom: 44px;
-    transform: rotate(6deg);
-    background: var(--yellow);
-    color: var(--ink);
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    padding: 4px 10px;
-    border: 2px solid var(--ink);
-    box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.35);
-    z-index: 3;
-  }
-
-  .about-text p {
-    font-size: 16px;
-    line-height: 2.1;
-    color: #f6e9ff;
-    margin-bottom: 18px;
-    text-align: justify;
-    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
-  }
-
-  .about-text p:last-of-type { margin-bottom: 0; }
-
-  .quote {
-    margin: 26px 0 30px;
-    padding: 14px 20px;
-    border-left: 4px solid var(--yellow);
-    background: rgba(255, 233, 74, 0.1);
-    font-size: 18px;
-    letter-spacing: 0.12em;
-    color: #fff;
-    text-shadow: 0 0 12px rgba(255, 233, 74, 0.55);
-  }
-
-  .facts {
-    margin-top: 10px;
-    border-top: 1px dashed var(--line);
-  }
-
-  .facts div {
-    display: grid;
-    grid-template-columns: 86px 1fr;
-    gap: 16px;
-    padding: 10px 0;
-    border-bottom: 1px dashed rgba(255, 255, 255, 0.16);
-    font-size: 13.5px;
-    letter-spacing: 0.06em;
-  }
-
-  .facts dt { color: var(--cyan); letter-spacing: 0.16em; }
-  .facts dd { color: #f6e9ff; }
-
-  /* ============ 作品 ============ */
-  .works-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: clamp(18px, 2.4vw, 30px);
-  }
-
-  .work {
-    position: relative;
-    border: 2px solid rgba(255, 255, 255, 0.34);
-    background: #12031f;
-    padding: 10px;
-    transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.5s ease;
-  }
-
-  .work:hover {
-    border-color: var(--yellow);
-    box-shadow: 0 0 0 2px rgba(255, 79, 184, 0.4), 0 0 26px rgba(255, 79, 184, 0.55);
-    transform: translateY(-4px);
-  }
-
-  .work-media {
-    overflow: hidden;
-    aspect-ratio: 1 / 1;
-    background: #1a0530;
-  }
-
-  .work-media img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 1.6s cubic-bezier(0.16, 0.7, 0.2, 1);
-    will-change: transform;
-  }
-
-  .work:hover .work-media img { transform: scale(1.09); }
-
-  .work-caption { padding: 12px 4px 4px; }
-
-  .work-caption h3 {
-    font-size: 15.5px;
-    font-weight: 400;
-    letter-spacing: 0.12em;
-    color: #fff;
-    text-shadow: 0 0 10px rgba(255, 79, 184, 0.65);
-  }
-
-  .work-caption p {
-    margin-top: 5px;
-    font-size: 11.5px;
-    letter-spacing: 0.08em;
-    color: var(--muted);
-  }
-
-  .work .loc {
-    position: absolute;
-    top: 18px;
-    left: 18px;
-    z-index: 2;
-    background: rgba(18, 3, 31, 0.82);
-    border: 1px solid rgba(95, 245, 255, 0.7);
-    color: var(--cyan);
-    font-size: 10.5px;
-    letter-spacing: 0.12em;
-    padding: 3px 8px;
-  }
-
-  .work .new {
-    position: absolute;
-    top: 18px;
-    right: 18px;
-    z-index: 2;
-    background: var(--yellow);
-    color: var(--ink);
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    padding: 2px 7px;
-    border: 1px solid var(--ink);
-    animation: blink 1.4s steps(1) infinite;
-  }
-
-  /* ============ 展览 ============ */
-  .ex-list { border-top: 1px dashed var(--line); }
-
-  .ex-row {
-    display: grid;
-    grid-template-columns: 96px 1fr auto;
-    gap: 22px;
-    align-items: baseline;
-    padding: 17px 12px;
-    border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
-    transition: background 0.4s ease, transform 0.4s ease;
-  }
-
-  .ex-row:hover {
-    background: linear-gradient(90deg, rgba(255, 79, 184, 0.16), rgba(95, 245, 255, 0.08), transparent);
-    transform: translateX(6px);
-  }
-
-  .ex-year {
-    font-size: 16.5px;
-    letter-spacing: 0.1em;
-    color: var(--yellow);
-    text-shadow: 0 0 12px rgba(255, 233, 74, 0.6);
-  }
-
-  .ex-title {
-    font-size: 16px;
-    letter-spacing: 0.08em;
-    color: #fff;
-  }
-
-  .ex-type {
-    display: inline-block;
-    margin-left: 10px;
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    color: var(--cyan);
-    border: 1px solid rgba(95, 245, 255, 0.6);
-    padding: 1px 6px;
-    vertical-align: 2px;
-  }
-
-  .ex-venue {
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    color: var(--muted);
-    text-align: right;
-  }
-
-  /* ============ 页脚 ============ */
-  .footer {
-    position: relative;
-    z-index: 1;
-    margin-top: 88px;
-    padding: 72px 28px 36px;
-    border-top: 3px solid var(--yellow);
-    background: linear-gradient(180deg, rgba(58, 8, 80, 0.55), rgba(8, 1, 20, 0.94));
-    scroll-margin-top: var(--nav-h);
-  }
-
+  /* 页脚 */
+  .footer { position: relative; z-index: 1; margin-top: 14px; padding: 64px 24px 34px;
+    scroll-margin-top: 20px;
+    background: linear-gradient(180deg, rgba(13,2,24,.6), #05010C);
+    border-top: 3px solid; border-image: linear-gradient(90deg, var(--pink), var(--yellow), var(--cyan), var(--purple)) 1; }
   .footer-inner { max-width: 1240px; margin: 0 auto; }
+  .footer-label { display: inline-block; font-family: var(--mono); font-size: 11px; letter-spacing: .26em; text-indent: .26em;
+    color: var(--ink); background: var(--cyan); padding: 4px 12px; margin-bottom: 26px;
+    border: 2px solid #fff; border-radius: 14px; box-shadow: 0 0 16px rgba(79,242,255,.6); transform: rotate(-1.4deg); }
+  .footer-mail { display: inline-block; font-size: clamp(22px, 3.8vw, 40px); letter-spacing: .03em; line-height: 1.35;
+    color: #fff; text-shadow: 0 0 18px rgba(79,242,255,.9), 3px 3px 0 rgba(255,30,142,.7);
+    border-bottom: 3px solid var(--yellow); padding-bottom: 6px; transition: color .3s ease; word-break: break-all; }
+  .footer-mail:hover { color: var(--yellow); }
+  .footer-social { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 34px; }
+  .footer-social a { font-size: 12.5px; letter-spacing: .1em; color: #fff; text-shadow: 1px 1px 0 rgba(0,0,0,.6);
+    border: 2px solid; padding: 7px 15px; transition: all .2s ease; background: rgba(13,2,24,.7); }
+  .footer-social a:nth-child(1) { border-color: var(--red); border-radius: 16px 4px 16px 4px; box-shadow: 0 0 12px rgba(255,59,59,.35); transform: rotate(-1deg); }
+  .footer-social a:nth-child(2) { border-color: var(--pink); border-radius: 4px 16px 4px 16px; box-shadow: 0 0 12px rgba(255,79,184,.35); transform: rotate(1.2deg); }
+  .footer-social a:nth-child(3) { border-color: var(--cyan); border-radius: 16px; box-shadow: 0 0 12px rgba(79,242,255,.3); transform: rotate(-.8deg); }
+  .footer-social a:nth-child(4) { border-color: var(--yellow); border-radius: 4px 4px 16px 16px; box-shadow: 0 0 12px rgba(255,233,74,.3); transform: rotate(1deg); }
+  .footer-social a:hover { transform: translateY(-3px) rotate(-2deg); background: rgba(255,255,255,.15); }
+  .footer-meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 26px;
+    margin-top: 46px; padding-top: 18px; border-top: 2px dashed rgba(255,255,255,.25);
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; color: #9C7BC0; }
+  .footer-meta .counter { color: var(--yellow); letter-spacing: .14em; text-shadow: 0 0 10px rgba(255,233,74,.6); }
 
-  .footer-label {
-    display: inline-block;
-    font-size: 11.5px;
-    letter-spacing: 0.3em;
-    text-indent: 0.3em;
-    color: var(--ink);
-    background: var(--cyan);
-    padding: 4px 12px;
-    box-shadow: 4px 4px 0 rgba(255, 79, 184, 0.5);
-    margin-bottom: 30px;
-  }
-
-  .footer-mail {
-    display: inline-block;
-    font-size: clamp(24px, 4.2vw, 46px);
-    letter-spacing: 0.04em;
-    line-height: 1.3;
-    color: #fff;
-    text-shadow:
-      0 0 18px rgba(95, 245, 255, 0.75),
-      4px 4px 0 rgba(255, 30, 142, 0.55);
-    border-bottom: 2px solid rgba(255, 233, 74, 0.7);
-    padding-bottom: 8px;
-    transition: color 0.4s ease, border-color 0.4s ease;
-    word-break: break-all;
-  }
-
-  .footer-mail:hover { color: var(--yellow); border-color: #fff; }
-
-  .footer-social {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 40px;
-  }
-
-  .footer-social a {
-    font-size: 12.5px;
-    letter-spacing: 0.12em;
-    color: #f0dcff;
-    border: 1px solid rgba(255, 79, 184, 0.55);
-    background: rgba(255, 79, 184, 0.12);
-    padding: 8px 16px;
-    border-radius: 999px;
-    transition: background 0.35s ease, color 0.35s ease, box-shadow 0.35s ease;
-  }
-
-  .footer-social a:hover {
-    background: var(--pink);
-    color: var(--ink);
-    box-shadow: 0 0 18px rgba(255, 79, 184, 0.7);
-  }
-
-  .footer-meta {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 14px 30px;
-    margin-top: 54px;
-    padding-top: 20px;
-    border-top: 1px dashed rgba(255, 255, 255, 0.2);
-    font-size: 11.5px;
-    letter-spacing: 0.1em;
-    color: #b795cc;
-  }
-
-  .footer-meta .counter { color: var(--yellow); letter-spacing: 0.16em; }
-
-  /* ============ 音乐播放器 ============ */
-  .music {
-    position: fixed;
-    right: 18px;
-    bottom: 18px;
-    z-index: 600;
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    padding: 9px 15px;
-    font-family: var(--serif);
-    font-size: 12px;
-    letter-spacing: 0.1em;
-    color: #fff;
-    border: 2px solid var(--yellow);
-    border-radius: 999px;
-    background: rgba(24, 4, 42, 0.9);
-    box-shadow:
-      0 0 0 3px rgba(255, 79, 184, 0.25),
-      0 0 20px rgba(123, 43, 255, 0.6);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
-    transition: background 0.35s ease, box-shadow 0.35s ease;
-  }
-
-  .music:hover { background: rgba(60, 10, 90, 0.95); box-shadow: 0 0 0 3px rgba(255, 233, 74, 0.4), 0 0 24px rgba(255, 79, 184, 0.6); }
-
-  .music .note {
-    font-size: 16px;
-    color: var(--yellow);
-    text-shadow: 0 0 10px rgba(255, 233, 74, 0.9);
-  }
-
+  /* 音乐按钮 */
+  .music { position: fixed; right: 16px; bottom: 16px; z-index: 610; display: flex; align-items: center; gap: 8px;
+    padding: 8px 14px; font-size: 12px; letter-spacing: .08em; color: #fff; border-radius: 20px;
+    background: rgba(13,2,24,.9); border: 2px solid var(--pink);
+    box-shadow: 0 0 20px rgba(255,79,184,.55), 3px 3px 0 rgba(0,0,0,.5);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+  .music .note { color: var(--yellow); font-size: 14px; text-shadow: 0 0 8px var(--yellow); }
   .music.hint { animation: pulse 1.8s ease-in-out infinite; }
+  .eq { display: flex; align-items: flex-end; gap: 2px; height: 12px; }
+  .eq i { display: block; width: 2px; height: 3px; background: var(--yellow); box-shadow: 0 0 6px rgba(255,233,74,.9); }
+  .music.playing .eq i { animation: equalize .9s ease-in-out infinite; }
+  .music.playing .eq i:nth-child(2) { animation-delay: -.3s; }
+  .music.playing .eq i:nth-child(3) { animation-delay: -.6s; }
 
-  .eq { display: flex; align-items: flex-end; gap: 2px; height: 13px; }
+  /* 弹幕 */
+  .danmaku-layer { position: fixed; inset: 0; z-index: 850; pointer-events: none; overflow: hidden; }
+  .danmaku-item { position: absolute; left: 0; white-space: nowrap; font-size: 15px; letter-spacing: .1em;
+    text-shadow: 0 0 10px currentColor, 2px 2px 0 rgba(0,0,0,.8); animation: danmaku-fly linear forwards; will-change: transform; }
 
-  .eq i {
-    display: block;
-    width: 2px;
-    height: 4px;
-    background: var(--cyan);
-    box-shadow: 0 0 6px rgba(95, 245, 255, 0.8);
-  }
+  /* 假蓝屏 */
+  .bsod { position: fixed; inset: 0; z-index: 2000; display: none; background: #0000A8; color: #E8E8E8;
+    font-family: var(--mono); font-size: clamp(13px, 1.6vw, 17px); line-height: 2; padding: 9vh 9vw; }
+  .bsod.show { display: block; }
+  .bsod .bsod-title { background: #C0C0C0; color: #0000A8; display: inline-block; padding: 0 14px; margin-bottom: 26px; letter-spacing: .2em; }
+  .bsod small { display: block; margin-top: 30px; opacity: .7; letter-spacing: .1em; }
 
-  .music.playing .eq i { animation: equalize 0.9s ease-in-out infinite; }
-  .music.playing .eq i:nth-child(2) { animation-delay: -0.3s; }
-  .music.playing .eq i:nth-child(3) { animation-delay: -0.6s; }
+  /* 头像雨 / 星尘 / toast */
+  .rain-head { position: fixed; top: -130px; z-index: 1500; pointer-events: none; animation: head-fall linear forwards; }
+  .mote { position: fixed; z-index: 940; pointer-events: none; animation: mote-fade .9s ease-out forwards; }
+  .toast { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1600;
+    background: rgba(13,2,24,.95); border: 3px solid var(--yellow); border-radius: 20px; color: #fff;
+    font-size: 15px; letter-spacing: .3em; text-indent: .3em; padding: 14px 30px;
+    box-shadow: 0 0 34px rgba(255,233,74,.7), 5px 5px 0 rgba(0,0,0,.55); pointer-events: none; text-shadow: 0 0 10px rgba(255,79,184,.8); }
 
-  /* ============ 动效 ============ */
-  .js .reveal {
-    opacity: 0;
-    transform: translateY(26px);
-    transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.16, 0.7, 0.2, 1);
-  }
-
+  /* 滚动入场 */
+  .js .reveal { opacity: 0; transform: translateY(24px); transition: opacity .8s ease, transform .8s cubic-bezier(.16,.7,.2,1); }
   .js .reveal.is-visible { opacity: 1; transform: none; }
 
-  @keyframes twinkle {
-    from { opacity: 0.38; }
-    to { opacity: 0.7; }
-  }
+  /* 动画 */
+  @keyframes blink { 0%, 60% { opacity: 1; } 61%, 100% { opacity: .12; } }
+  @keyframes rainbow-slide { to { background-position: 300% 0; } }
+  @keyframes spin-star { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  @keyframes sway { 0%, 100% { transform: rotate(-2.4deg); } 50% { transform: rotate(2.4deg); } }
+  @keyframes floaty { 0%, 100% { transform: translateY(0) rotate(var(--rot)); } 50% { transform: translateY(-14px) rotate(calc(var(--rot) + 4deg)); } }
+  @keyframes floaty2 { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+  @keyframes pop { 0% { transform: scale(1); } 40% { transform: scale(1.2) rotate(-5deg); } 100% { transform: scale(1); } }
+  @keyframes bubble-in { from { opacity: 0; transform: translate(-50%, -90%) scale(.8); } to { opacity: 1; transform: translate(-50%, -100%) scale(1); } }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+  @keyframes scroll-line { 0% { transform: scaleY(0); transform-origin: top; } 45% { transform: scaleY(1); transform-origin: top; } 55% { transform: scaleY(1); transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
+  @keyframes danmaku-fly { from { transform: translateX(105vw); } to { transform: translateX(-115%); } }
+  @keyframes head-fall { to { transform: translateY(118vh) rotate(340deg); } }
+  @keyframes mote-fade { from { opacity: .95; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(-18px) scale(.4); } }
+  @keyframes pulse { 0%, 100% { box-shadow: 0 0 12px rgba(255,79,184,.4), 3px 3px 0 rgba(0,0,0,.5); } 50% { box-shadow: 0 0 28px rgba(255,233,74,.85), 3px 3px 0 rgba(0,0,0,.5); } }
+  @keyframes equalize { 0%, 100% { height: 3px; } 50% { height: 12px; } }
+  @keyframes glitch-r { 0% { transform: translate(3px, -2px); } 50% { transform: translate(-4px, 1px); } 100% { transform: translate(2px, 2px); } }
+  @keyframes glitch-b { 0% { transform: translate(-3px, 2px); } 50% { transform: translate(4px, -1px); } 100% { transform: translate(-2px, -2px); } }
 
-  @keyframes drift {
-    0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.4; }
-    50% { transform: translateY(-18px) rotate(18deg); opacity: 0.85; }
-  }
-
-  @keyframes rainbow {
-    to { background-position: 300% 0; }
-  }
-
-  @keyframes blink {
-    0%, 60% { opacity: 1; }
-    61%, 100% { opacity: 0.15; }
-  }
-
-  @keyframes scroll-line {
-    0% { transform: scaleY(0); transform-origin: top; }
-    45% { transform: scaleY(1); transform-origin: top; }
-    55% { transform: scaleY(1); transform-origin: bottom; }
-    100% { transform: scaleY(0); transform-origin: bottom; }
-  }
-
-  @keyframes floaty {
-    0%, 100% { transform: translateY(0) rotate(var(--rot)); }
-    50% { transform: translateY(-16px) rotate(calc(var(--rot) + 5deg)); }
-  }
-
-  @keyframes marquee {
-    to { transform: translateX(-50%); }
-  }
-
-  @keyframes pulse {
-    0%, 100% { box-shadow: 0 0 0 3px rgba(255, 79, 184, 0.25), 0 0 18px rgba(255, 233, 74, 0.35); }
-    50% { box-shadow: 0 0 0 6px rgba(255, 233, 74, 0.28), 0 0 26px rgba(255, 79, 184, 0.75); }
-  }
-
-  @keyframes equalize {
-    0%, 100% { height: 3px; }
-    50% { height: 13px; }
-  }
-
-  /* ============ 响应式 ============ */
+  /* 响应式 */
   @media (max-width: 1000px) {
-    .nav-inner { padding: 0 20px; }
-    .nav-links { gap: 2px; }
-    .section { padding: 70px 20px 0; }
+    .portal { grid-template-columns: 1fr; padding: 30px 18px 0; }
+    .sidebar { position: static; flex-direction: row; flex-wrap: wrap; }
+    .side-box { flex: 1 1 200px; transform: none !important; }
+    .side-nav { flex-basis: 100%; }
+    .side-nav a { display: inline-block; margin: 3px 6px 3px 0; }
     .about-grid { grid-template-columns: 1fr; }
-    .portrait { max-width: 400px; margin: 0 auto; }
+    .portrait { max-width: 380px; margin: 0 auto; }
     .works-grid { grid-template-columns: repeat(2, 1fr); }
-    .ex-row { grid-template-columns: 88px 1fr; gap: 14px; }
+    .work { transform: none !important; }
+    .ex-row { grid-template-columns: 84px 1fr; gap: 12px; margin-left: 0 !important; }
     .ex-venue { grid-column: 2; text-align: left; }
-    .hero-sticker.a { top: 18%; left: 3%; }
-    .hero-sticker.b { bottom: 18%; right: 3%; }
+    .hero-widgets { display: none; }
+    .hero-side-deco { right: 12px; }
+    .sticker.a { left: 5%; top: 32%; }
+    .sticker.b { right: 4%; }
   }
-
-  @media (max-width: 680px) {
-    :root { --nav-h: 58px; }
-    .nav-inner { padding: 0 14px; }
-    .brand { font-size: 12px; letter-spacing: 0.1em; }
-    .brand .long { display: none; }
-    .nav-links { gap: 0; }
-    .nav-links a { font-size: 11px; letter-spacing: 0.08em; padding: 6px 9px; }
-    .hero { padding-top: calc(var(--nav-h) + 20px); }
-    .hero-name { letter-spacing: 0.08em; text-indent: 0.08em; }
-    .hero-sub-box { padding: 10px 16px; }
-    .hero-sub { letter-spacing: 0.1em; text-indent: 0.1em; }
-    .hero-sticker { width: 82px; }
-    .hero-sticker.a { top: 16%; }
-    .hero-sticker.b { bottom: 16%; }
+  @media (max-width: 640px) {
+    .hang-tag .brand-mini { display: none; }
+    .hang-tag .tag { font-size: 11px; letter-spacing: .12em; padding: 5px 10px 6px; }
+    .hang-tag.t1 .string { height: 22px; } .hang-tag.t2 .string { height: 38px; }
+    .hang-tag.t3 .string { height: 28px; } .hang-tag.t4 .string { height: 44px; }
+    .hero { padding-top: 130px; }
+    .hero-name { letter-spacing: .06em; text-indent: .06em; }
+    .hero-sub-box { padding: 8px 14px; }
     .hero-note.left, .hero-note.right { display: none; }
-    .section { padding: 54px 14px 0; }
-    .win-body { padding: 20px 16px; }
-    .sec-head { gap: 12px; margin-bottom: 26px; }
+    .hero-side-deco { display: none; }
+    .sticker { width: 72px; }
+    .deco-star.s1, .deco-star.s2 { font-size: 30px; }
+    .deco-star.s3, .deco-star.s4 { font-size: 24px; }
+    .win-body { padding: 18px 14px; }
     .sec-note { display: none; }
     .works-grid { grid-template-columns: 1fr; }
-    .work-caption h3 { font-size: 15px; }
-    .footer { padding: 54px 16px 30px; }
-    .footer-meta { margin-top: 38px; flex-direction: column; }
-    .music { right: 12px; bottom: 12px; padding: 8px 12px; font-size: 11px; }
+    .window { transform: none !important; }
+    .footer { padding: 48px 16px 28px; }
+    .footer-meta { flex-direction: column; margin-top: 34px; }
+    .hud { display: none; }
+    .music { right: 10px; bottom: 10px; padding: 7px 11px; font-size: 11px; }
   }
-
   @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-      animation-duration: 0.001ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.001ms !important;
-      scroll-behavior: auto !important;
-    }
+    *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
   }
+  /* ---- 穿越之门 ---- */
+  body.portal-lock{overflow:hidden;height:100vh}
+  #portal{position:fixed;inset:0;z-index:999999;display:flex;align-items:center;justify-content:center;padding:20px;
+    background:radial-gradient(600px 400px at 30% 20%,rgba(255,47,179,.28),transparent 70%),radial-gradient(700px 500px at 75% 80%,rgba(57,230,255,.22),transparent 70%),radial-gradient(500px 500px at 55% 50%,rgba(176,63,255,.25),transparent 70%),#07001a;
+    animation:portalHue 8s linear infinite}
+  @keyframes portalHue{0%,100%{filter:hue-rotate(0deg)}50%{filter:hue-rotate(18deg)}}
+  #portal::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:repeating-linear-gradient(0deg,rgba(0,0,0,.35) 0 2px,transparent 2px 4px)}
+  .p-window{width:440px;max-width:94vw;position:relative;border:2px solid var(--cyan);background:#12042a;box-shadow:0 0 0 2px #000,0 0 34px rgba(57,230,255,.5),0 0 90px rgba(255,47,179,.35);animation:portalWin .6s cubic-bezier(.2,1.6,.4,1) both}
+  @keyframes portalWin{0%{transform:translateY(40px) scale(.85);opacity:0}100%{transform:none;opacity:1}}
+  .p-window.shake{animation:pShake .4s}
+  @keyframes pShake{0%,100%{transform:none}20%{transform:translateX(-10px)}40%{transform:translateX(9px)}60%{transform:translateX(-6px)}80%{transform:translateX(4px)}}
+  .p-titlebar{display:flex;justify-content:space-between;align-items:center;padding:7px 12px;font-size:14px;font-weight:700;letter-spacing:2px;color:#031019;background:linear-gradient(90deg,var(--cyan),var(--pink));border-bottom:2px solid #000}
+  .p-titlebar i{font-style:normal;cursor:pointer}
+  .p-body{padding:22px 22px 18px;color:var(--cyan)}
+  .p-line{margin:0 0 10px;font-size:15px;letter-spacing:1px;line-height:1.7;color:#bff6ff}
+  .p-line b{color:var(--pink)}
+  .p-hint{margin:0 0 14px;font-size:13px;color:var(--lav);opacity:.85}
+  .p-row{display:flex;gap:10px}
+  #pInput{flex:1;background:#050016;border:2px solid var(--violet);color:#fff;font:inherit;font-size:15px;padding:9px 10px;outline:none;letter-spacing:2px}
+  #pInput:focus{border-color:var(--pink);box-shadow:0 0 10px rgba(255,47,179,.5)}
+  #pBtn{background:var(--pink);color:#fff;border:2px solid #000;box-shadow:3px 3px 0 #000;padding:0 20px;font:inherit;font-size:15px;font-weight:700;letter-spacing:4px;cursor:pointer;transition:transform .12s,box-shadow .12s}
+  #pBtn:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 #000;background:#ff5ac8}
+  #pBtn:active{transform:translate(3px,3px);box-shadow:0 0 0 #000}
+  .p-err{min-height:22px;margin:10px 0 0;font-size:13px;color:#ff8a8a;letter-spacing:1px}
+  .p-skip{margin:12px 0 0;font-size:13px;color:var(--lav);opacity:.7;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+  .p-skip:hover{color:var(--pink);opacity:1}
+  .p-stamp{display:inline-block;font-size:38px;font-weight:900;letter-spacing:6px;color:#ff5a3c;border:4px double #ff5a3c;padding:4px 16px;margin:6px 0 18px;transform:rotate(-9deg);text-shadow:0 0 16px rgba(255,90,60,.65);box-shadow:0 0 18px rgba(255,90,60,.3),inset 0 0 12px rgba(255,90,60,.25);animation:stampIn .45s cubic-bezier(.2,2.4,.4,1) both}
+  @keyframes stampIn{0%{transform:scale(3) rotate(-30deg);opacity:0}100%{transform:scale(1) rotate(-9deg);opacity:1}}
+  .p-loadwrap{margin-top:4px}
+  .p-loadtext{font-size:14px;color:#bff6ff;letter-spacing:1px;margin-bottom:10px;min-height:20px}
+  .p-loadtext::after{content:"█";animation:blink 0.9s steps(1) infinite;color:var(--cyan)}
+  .p-bar{height:18px;border:2px solid var(--cyan);background:#050016;box-shadow:inset 0 0 8px #000}
+  .p-bar-in{height:100%;width:0%;background:repeating-linear-gradient(45deg,var(--pink) 0 10px,var(--cyan) 10px 20px);box-shadow:0 0 12px rgba(255,47,179,.7)}
+  .p-pct{margin-top:8px;font-size:13px;color:var(--lav);letter-spacing:2px;text-align:right}
+  /* 时间机器拉杆 */
+  .p-window{overflow:hidden}
+  .p-lever{display:flex;align-items:center;gap:12px;margin:8px 0 2px}
+  .p-y{font-size:13px;color:var(--lav);letter-spacing:1px;white-space:nowrap}
+  #pRange{flex:1;appearance:none;-webkit-appearance:none;height:10px;background:linear-gradient(90deg,var(--pink),var(--violet),var(--cyan));border:2px solid #000;box-shadow:inset 0 0 8px #000,0 0 10px rgba(255,47,179,.4);outline:none;border-radius:6px}
+  #pRange::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:26px;height:36px;background:linear-gradient(180deg,#ffe95c,#ffb13c);border:2px solid #000;border-radius:6px;box-shadow:0 0 12px rgba(255,233,92,.8);cursor:pointer}
+  #pRange::-moz-range-thumb{width:24px;height:34px;background:linear-gradient(180deg,#ffe95c,#ffb13c);border:2px solid #000;border-radius:6px;box-shadow:0 0 12px rgba(255,233,92,.8);cursor:pointer}
+  #pRange:disabled{opacity:.45}
+  .p-bigyear{text-align:center;font-size:64px;font-weight:900;line-height:1.1;margin:8px 0 2px;color:#ffe95c;letter-spacing:6px;text-shadow:0 0 18px rgba(255,233,92,.7),3px 3px 0 #b03fff}
+  .p-bigyear.spin{animation:yearSpin .12s linear infinite}
+  @keyframes yearSpin{0%{transform:skewX(-7deg) scaleY(1)}50%{transform:skewX(7deg) scaleY(.84)}100%{transform:skewX(-7deg) scaleY(1)}}
+  .p-snow{position:absolute;inset:0;display:none;pointer-events:none;z-index:5;mix-blend-mode:screen;
+    background:repeating-linear-gradient(115deg,rgba(255,255,255,.15) 0 2px,transparent 2px 5px),repeating-linear-gradient(23deg,rgba(255,255,255,.12) 0 1px,transparent 1px 3px),repeating-linear-gradient(0deg,rgba(255,255,255,.09) 0 1px,transparent 1px 2px);
+    animation:snowShift .12s steps(2) infinite}
+  .p-snow.on{display:block}
+  @keyframes snowShift{0%{background-position:0 0,0 0,0 0}25%{background-position:13px 7px,-6px 2px,0 1px}50%{background-position:-9px 3px,8px -4px,0 2px}75%{background-position:5px -11px,-3px 6px,0 1px}100%{background-position:0 0,0 0,0 0}}
+  @media(max-width:520px){.p-stamp{font-size:28px;letter-spacing:3px}.p-bigyear{font-size:46px}}
 </style>
 </head>
 <body>
 
+  <!-- 穿越之门 -->
+  <div id="portal">
+    <div class="p-window" id="pWindow">
+      <div class="p-titlebar"><span>夢核網咖 · 穿越终端 v1.999</span><i>✕</i></div>
+      <div class="p-snow" id="pSnow"></div>
+      <div class="p-body">
+        <div id="pStepTask">
+          <p class="p-line">⚠ 时间机器已启动，当前坐标：<b id="pYear">2026</b> 年</p>
+          <p class="p-hint">任务：扳动拉杆，把年份拉回 2008，回到夢核年代。</p>
+          <div class="p-lever">
+            <span class="p-y">2008</span>
+            <input type="range" id="pRange" min="2008" max="2026" step="1" value="2026" />
+            <span class="p-y">2026</span>
+          </div>
+          <div class="p-bigyear" id="pBigYear">2026</div>
+          <p class="p-err" id="pErr"></p>
+          <p class="p-skip" id="pSkip">» 不想穿越？直接进网吧</p>
+        </div>
+        <div id="pStepDone" hidden>
+          <div class="p-stamp">已穿越成功</div>
+          <div class="p-loadwrap">
+            <div class="p-loadtext" id="pLoadText">正在拨号……</div>
+            <div class="p-bar"><div class="p-bar-in" id="pBarIn"></div></div>
+            <div class="p-pct" id="pPct">0%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <audio id="bgm" src="assets/bgm.mp3" loop preload="auto"></audio>
 
-  <div class="bg-stars" aria-hidden="true">
-    <span>✦</span><span>✧</span><span>✦</span><span>✧</span>
-  </div>
-  <div class="scanlines" aria-hidden="true"></div>
-  <div class="vignette" aria-hidden="true"></div>
+  <div class="fx-grain" aria-hidden="true"></div>
+  <div class="fx-scan" aria-hidden="true"></div>
+  <div class="fx-vignette" aria-hidden="true"></div>
+  <div class="danmaku-layer" id="danmakuLayer" aria-hidden="true"></div>
 
-  <!-- 固定导航 -->
-  <header class="nav">
-    <div class="nav-inner">
-      <a class="brand" href="#top"><b>★</b> 曹林泽の夢核檔案<span class="long"> · 二〇〇八</span></a>
-      <nav class="nav-links">
-        <a href="#about">关于</a>
-        <a href="#works">作品</a>
-        <a href="#exhibition">展览</a>
-        <a href="#contact">联系</a>
-      </nav>
-    </div>
-  </header>
+  <div class="hud" aria-hidden="true">
+    <span class="crosshair">┼</span> X:<span id="hudX">0000</span> Y:<span id="hudY">0000</span><br />
+    FPS:<span id="hudFps">60</span> · MAP: netcafe_2am.bsp
+  </div>
 
   <main id="top">
     <!-- 首屏 -->
     <section class="hero">
-      <div class="hero-ghost" aria-hidden="true">夢</div>
+      <!-- 霓虹吊牌导航（非固定，随首屏滚走） -->
+      <nav class="hang-nav" aria-label="站内导航">
+        <a class="hang-tag t1" href="#about"><span class="string"></span><span class="tag">关于</span><span class="brand-mini">PROFILE</span></a>
+        <a class="hang-tag t2" href="#works"><span class="string"></span><span class="tag">作品</span><span class="brand-mini">WORKS</span></a>
+        <a class="hang-tag t3" href="#exhibition"><span class="string"></span><span class="tag">展览</span><span class="brand-mini">EXPO</span></a>
+        <a class="hang-tag t4" href="#contact"><span class="string"></span><span class="tag">联系</span><span class="brand-mini">MAIL</span></a>
+      </nav>
 
-      <div class="hero-sticker a" aria-hidden="true">
-        <div class="disc">
-          <img src="assets/head.png" alt="" data-prompt="cutout head sticker of a smiling man with glasses, white background, y2k sticker aesthetic, pink circular outline" />
-        </div>
+      <div class="deco-star s1">✦</div>
+      <div class="deco-star s2">✧</div>
+      <div class="deco-star s3">★</div>
+      <div class="deco-star s4">✦</div>
+      <div class="deco-kaomoji k1">o(≧v≦)o</div>
+      <div class="deco-kaomoji k2">(～￣▽￣)～</div>
+      <div class="deco-kaomoji k3">★彡</div>
+
+      <div class="hero-widgets">
+        <div class="widget w1"><div class="w-title">LOCAL TIME</div><div class="big" id="clock">00:00:00</div></div>
+        <div class="widget w2"><div class="w-title">今日天气</div><div>夢核市 · 晴转多云</div><div class="big">-260°C</div></div>
+        <div class="widget w3"><div class="w-title">今日运势</div><div>宜：打枪 画画</div><div>忌：做梦 睡觉</div></div>
+      </div>
+
+      <div class="hero-side-deco">
+        <span class="qq-badge q1">QQ秀 · 限定</span>
+        <span class="qq-badge q2">黄钻 LV7</span>
+        <span class="qq-badge q3">NEW!</span>
+      </div>
+
+      <div class="sticker a" data-quote>
+        <div class="disc"><img src="assets/head.png" alt="" data-prompt="cutout head sticker of a smiling man with glasses, white background, y2k qq show sticker aesthetic, pink circular outline" /></div>
         <span class="tag">孙吧吧主</span>
       </div>
+      <div class="sticker b" data-quote>
+        <div class="disc"><img src="assets/head.png" alt="" data-prompt="cutout head sticker of a smiling man with glasses, white background, y2k qq show sticker aesthetic, pink circular outline" /></div>
+        <span class="tag">原神会员</span>
+      </div>
 
-      <div class="hero-sticker b" aria-hidden="true">
-        <div class="disc">
-          <img src="assets/head.png" alt="" data-prompt="cutout head sticker of a smiling man with glasses, white background, y2k sticker aesthetic, pink circular outline" />
+      <div class="hero-tag-row">
+        <span class="hero-chip c1">做梦一般</span>
+        <span class="hero-chip c2">在线中</span>
+        <span class="hero-chip c3">孙笑川梦男</span>
+        <span class="hero-chip c4">超爱画画</span>
+      </div>
+
+      <div class="hero-name-wrap">
+        <h1 class="hero-name"><span class="hn-char"><i>CAO</i>曹</span><span class="hn-char"><i>LIN</i>林</span><span class="hn-char"><i>ZE</i>泽</span><span class="hn-tm">™</span><span class="glitch g-r" aria-hidden="true"><span class="hn-char"><i>CAO</i>曹</span><span class="hn-char"><i>LIN</i>林</span><span class="hn-char"><i>ZE</i>泽</span></span><span class="glitch g-b" aria-hidden="true"><span class="hn-char"><i>CAO</i>曹</span><span class="hn-char"><i>LIN</i>林</span><span class="hn-char"><i>ZE</i>泽</span></span></h1>
+        <div class="hero-name-en">DREAMCORE NETCAFE · EST. 2008 · ZHENGZHOU ⇒ TIANJIN</div>
+      </div>
+
+      <div class="hero-sub-box"><p class="hero-sub"><span id="typedText"></span><span class="caret"></span></p></div>
+
+      <div class="hero-mini-ticker" aria-hidden="true">
+        <div class="ticker-track">
+          <span>◆ 歡迎光臨我的空間 ◆ 最忠诚的河南人 ◆ 留言必回 ◆ 经验＋3 ◆ 點擊頭像有彩蛋 ◆ 秘籍 ↑↑↓↓←→←→BA ◆</span>
+          <span>◆ 歡迎光臨我的空間 ◆ 最忠诚的河南人 ◆ 留言必回 ◆ 经验＋3 ◆ 點擊頭像有彩蛋 ◆ 秘籍 ↑↑↓↓←→←→BA ◆</span>
         </div>
-        <span class="tag">梦核会员</span>
       </div>
 
-      <p class="hero-eyebrow"><i></i>夢核檔案 · 二〇二六 · 在线<i></i></p>
+      <p class="press-start">— 按任意键进入 —</p>
 
-      <h1 class="hero-name">曹林泽</h1>
-
-      <div class="hero-sub-box">
-        <p class="hero-sub">工艺美术，多人pk，打枪游戏，孙吧吧主</p>
-      </div>
-
-      <div class="hero-scroll">
-        <span>向下潜行</span>
-        <i></i>
-      </div>
-
-      <p class="hero-note left">★ 建议分辨率 1024 × 768 ★</p>
-      <p class="hero-note right">访客 0008848</p>
+      <div class="hero-scroll"><span>向下潜行</span><i></i></div>
+      <p class="hero-note left">RES 1024×768 · 32BIT</p>
+      <p class="hero-note right">凌晨两点 · 包夜中</p>
     </section>
 
-    <!-- 跑马灯 -->
+    <!-- 主跑马灯 -->
     <div class="ticker" aria-hidden="true">
       <div class="ticker-track">
-        <span>★ 歡迎來到曹林泽の夢核檔案 ★ 工藝美術 ★ 多人PK ★ 打槍遊戲 ★ 孫吧吧主 ★ 夢到啥說啥 ★ 二〇〇八生於鄭州 ★ 現居天津 ★</span>
-        <span>★ 歡迎來到曹林泽の夢核檔案 ★ 工藝美術 ★ 多人PK ★ 打槍遊戲 ★ 孫吧吧主 ★ 夢到啥說啥 ★ 二〇〇八生於鄭州 ★ 現居天津 ★</span>
+        <span>★ 歡迎來到曹林泽の夢核網咖 ★ 工藝美術 ★ 原神大手子 ★ 打槍遊戲 ★ 孫吧吧主 ★ 夢到啥說啥 ★ 二〇〇八生於鄭州 ★ 現居天津 ★ 路過的記得踩一踩 ★</span>
+        <span>★ 歡迎來到曹林泽の夢核網咖 ★ 工藝美術 ★ 原神大手子 ★ 打槍遊戲 ★ 孫吧吧主 ★ 夢到啥說啥 ★ 二〇〇八生於鄭州 ★ 現居天津 ★ 路過的記得踩一踩 ★</span>
       </div>
     </div>
 
-    <!-- 关于我 -->
-    <section class="section" id="about">
-      <div class="window reveal">
-        <div class="win-bar">
-          <span>档案 · 关于我？/。#</span>
-          <span class="win-dots"><i></i><i></i><i></i></span>
-          <span>No. 2008</span>
+    <!-- 门户布局 -->
+    <div class="portal">
+      <aside class="sidebar">
+        <div class="side-box b1 site-card">
+          <div class="avatar"><img src="assets/head.png" alt="孙笑川头像" /></div>
+          <div class="name">曹林泽の空间</div>
+          <div class="sub">EST. 2008 · 郑州 → 天津</div>
         </div>
-        <div class="win-body">
-          <div class="sec-head">
-            <span class="sec-num">01</span>
-            <h2 class="sec-title">关于我？/。#</h2>
-            <span class="sec-note">艺术家自述 · 未经删减</span>
-          </div>
 
-          <div class="about-grid">
-            <figure class="portrait">
-              <div class="frame">
-                <img src="assets/portrait.webp" alt="曹林泽的艺术家肖像" data-prompt="vintage yearbook portrait of a young Chinese artist in a navy suit, dreamy pastel studio background, soft VHS glow, early 2000s digital camera aesthetic" />
+        <div class="side-box b2 side-nav">
+          <div class="side-title">★ 站内导航 ★</div>
+          <a href="#about">关于我</a>
+          <a href="#works">作品画廊</a>
+          <a href="#exhibition">展览经历</a>
+          <a href="#guestbook">留言板</a>
+          <a href="#contact">联系方式</a>
+        </div>
+
+        <div class="side-box b3 counter-box" id="counterBox" title="别点我">
+          <div class="side-title">访客计数</div>
+          <span class="num">0008848</span>
+          <small>（不要乱点）</small>
+        </div>
+
+        <div class="side-box b4">
+          <div class="side-title">弹幕开关</div>
+          <button class="side-btn" id="danmakuToggle" type="button">弹幕：开</button>
+        </div>
+
+        <div class="side-box b5 friend-links">
+          <div class="side-title">友情链接</div>
+          <a href="#">孙吧</a><a href="#">原神吧</a><a href="#">微信</a><a href="#">X</a><a href="#">米哈游孝子</a>
+        </div>
+
+        <div class="side-box b6 tip-box">
+          <div class="side-title">机密档案</div>
+          输入秘籍 <b>↑↑↓↓←→←→BA</b> 有惊喜<br />
+          点击头像贴纸可对话<br />
+          悬停名字会崩坏
+        </div>
+      </aside>
+
+      <div class="content">
+        <!-- 关于我 -->
+        <section class="window w-about reveal" id="about">
+          <div class="win-bar"><span>PROFILE.EXE · 关于我？/。</span><span class="dots"><i></i><i></i><i></i></span></div>
+          <div class="win-body">
+            <div class="sec-head">
+              <span class="sec-num">01</span>
+              <h2 class="sec-title">关于我？/。#<span class="glitch-t" aria-hidden="true">关于我？/。#</span></h2>
+              <span class="sec-note">艺术家自述 · 未经删减</span>
+            </div>
+            <div class="about-grid">
+              <figure class="portrait">
+                <div class="frame">
+                  <img src="assets/portrait.webp" alt="曹林泽的艺术家肖像" data-prompt="vintage yearbook portrait of a young Chinese artist in a navy suit, dreamy pastel studio background, y2k low resolution aesthetic, hazy glow" />
+                </div>
+                <figcaption>曹林泽 · 二〇〇八 · 郑州 → 天津</figcaption>
+                <span class="owner-badge">孙吧吧主</span>
+              </figure>
+              <div class="about-text">
+                <p>曹林泽，二零零八年生于河南郑州，现工作生活于天津。他的创作关于思维抽象、梦到啥说啥，数据与感情之间的关系展开，把代码视为与泥土、颜料同等分量的材料，在屏幕与空间之间寻找可以被身体感知的秩序。</p>
+                <p>他习惯从一段极小的规则出发，让粒子、线条与光在时间的推移中自行生长、偏移与消散。作品往往呈现出克制的黑白灰与近乎呼吸般的节奏，观众所看到的并非结果，而是一个正在发生的过程。</p>
+                <p>近期创作延伸至实时影像与声音装置，尝试让机器生成的速度慢下来，使技术显露出它柔软、迟疑甚至温柔的一面。</p>
+                <p class="quote-line">「夢到啥說啥，醒了再說。」</p>
+                <dl class="facts">
+                  <div><dt>生年</dt><dd>二〇〇八</dd></div>
+                  <div><dt>出生地</dt><dd>河南 · 郑州</dd></div>
+                  <div><dt>现居</dt><dd>天津</dd></div>
+                  <div><dt>身份</dt><dd>艺术家 · 孙吧吧主</dd></div>
+                  <div><dt>媒介</dt><dd>工艺美术、打枪游戏、多人PK、代码</dd></div>
+                </dl>
               </div>
-              <figcaption>曹林泽 · 二〇〇八 · 郑州 → 天津</figcaption>
-              <span class="owner-badge">孙吧吧主</span>
-            </figure>
-
-            <div class="about-text">
-              <p>曹林泽，二零零八年生于河南郑州，现工作生活于天津。他的创作关于思维抽象、梦到啥说啥，数据与感情之间的关系展开，把代码视为与泥土、颜料同等分量的材料，在屏幕与空间之间寻找可以被身体感知的秩序。</p>
-              <p>他习惯从一段极小的规则出发，让粒子、线条与光在时间的推移中自行生长、偏移与消散。作品往往呈现出克制的黑白灰与近乎呼吸般的节奏，观众所看到的并非结果，而是一个正在发生的过程。</p>
-              <p>近期创作延伸至实时影像与声音装置，尝试让机器生成的速度慢下来，使技术显露出它柔软、迟疑甚至温柔的一面。</p>
-
-              <p class="quote">「夢到啥說啥，醒了再說。」</p>
-
-              <dl class="facts">
-                <div><dt>生年</dt><dd>二〇〇八</dd></div>
-                <div><dt>出生地</dt><dd>河南 · 郑州</dd></div>
-                <div><dt>现居</dt><dd>天津</dd></div>
-                <div><dt>身份</dt><dd>艺术家 · 孙吧吧主</dd></div>
-                <div><dt>媒介</dt><dd>工艺美术、打枪游戏、多人PK、代码</dd></div>
-              </dl>
             </div>
           </div>
-        </div>
-      </div>
-    </section>
+        </section>
 
-    <!-- 作品 -->
-    <section class="section" id="works">
-      <div class="window reveal">
-        <div class="win-bar">
-          <span>作品画廊 · 六件</span>
-          <span class="win-dots"><i></i><i></i><i></i></span>
-          <span>全球巡展中</span>
-        </div>
-        <div class="win-body">
-          <div class="sec-head">
-            <span class="sec-num">02</span>
-            <h2 class="sec-title">作品</h2>
-            <span class="sec-note">二〇二三 — 二〇二六 · 夢遊產物</span>
+        <!-- 作品画廊 -->
+        <section class="window w-works reveal" id="works">
+          <div class="win-bar"><span>GALLERY.BSP · 作品画廊</span><span class="dots"><i></i><i></i><i></i></span></div>
+          <div class="win-body">
+            <div class="sec-head">
+              <span class="sec-num">02</span>
+              <h2 class="sec-title">作品<span class="glitch-t" aria-hidden="true">作品</span></h2>
+              <span class="sec-note">点击作品 · 打开查看窗口</span>
+            </div>
+            <div class="works-grid">
+              <figure class="work" data-work="0">
+                <span class="loc">柏林</span><span class="click-hint">点击查看</span>
+                <div class="work-media"><img loading="lazy" src="assets/work1.jpg" alt="作品《笑着说再见》" data-prompt="black and white meme portrait of a laughing man with glasses, vintage television scanlines, y2k low resolution, faded film grain" /></div>
+                <figcaption class="work-caption"><h3>笑着说再见</h3><p>二〇二六 · 数字影像</p></figcaption>
+              </figure>
+              <figure class="work" data-work="1">
+                <span class="loc">纽约</span><span class="click-hint">点击查看</span>
+                <div class="work-media"><img loading="lazy" src="assets/work2.webp" alt="作品《吧主》" data-prompt="casual portrait of a Chinese man in a white shirt against a plain wall, early 2000s digital camera flash, y2k low resolution nostalgia" /></div>
+                <figcaption class="work-caption"><h3>吧主</h3><p>二〇二五 · 观念摄影</p></figcaption>
+              </figure>
+              <figure class="work" data-work="2">
+                <span class="loc">威尼斯</span><span class="click-hint">点击查看</span>
+                <div class="work-media"><img loading="lazy" src="assets/work3.webp" alt="作品《绿幕英雄》" data-prompt="full body portrait on a chroma key green screen, y2k internet meme aesthetic, harsh studio lighting, VHS artifacts" /></div>
+                <figcaption class="work-caption"><h3>绿幕英雄</h3><p>二〇二五 · 实时影像</p></figcaption>
+              </figure>
+              <figure class="work" data-work="3">
+                <span class="loc">巴黎</span><span class="click-hint">点击查看</span>
+                <div class="work-media"><img loading="lazy" src="assets/work4.webp" alt="作品《双人PK》" data-prompt="selfie of a man and a woman in blue suits with a red bow tie, compact digital camera flash, early 2000s party snapshot" /></div>
+                <figcaption class="work-caption"><h3>双人PK</h3><p>二〇二四 · 数字合成</p></figcaption>
+              </figure>
+              <figure class="work" data-work="4">
+                <span class="loc">东京</span><span class="click-hint">点击查看</span>
+                <div class="work-media"><img loading="lazy" src="assets/work5.webp" alt="作品《匿名者》" data-prompt="hooded man sitting in a leather chair, dramatic red Chinese typography overlay, y2k poster aesthetic, high contrast" /></div>
+                <figcaption class="work-caption"><h3>匿名者</h3><p>二〇二四 · 网络影像</p></figcaption>
+              </figure>
+              <figure class="work" data-work="5">
+                <span class="loc">伦敦</span><span class="click-hint">点击查看</span>
+                <div class="work-media"><img loading="lazy" src="assets/work6.webp" alt="作品《旧闻一则》" data-prompt="vintage sepia meme photograph with bold yellow and red text, retro propaganda collage, y2k dreamcore internet art" /></div>
+                <figcaption class="work-caption"><h3>旧闻一则</h3><p>二〇二三 · 拼贴摄影</p></figcaption>
+              </figure>
+            </div>
           </div>
+        </section>
 
-          <div class="works-grid">
-            <figure class="work">
-              <span class="loc">柏林</span>
-              <span class="new">NEW</span>
-              <div class="work-media">
-                <img loading="lazy" src="assets/work1.jpg" alt="作品《笑着说再见》" data-prompt="black and white meme portrait of a laughing man with glasses, vintage television scanlines, melancholic dreamcore, faded film grain" />
-              </div>
-              <figcaption class="work-caption">
-                <h3>笑着说再见</h3>
-                <p>二〇二六 · 数字影像</p>
-              </figcaption>
-            </figure>
-
-            <figure class="work">
-              <span class="loc">纽约</span>
-              <div class="work-media">
-                <img loading="lazy" src="assets/work2.webp" alt="作品《吧主》" data-prompt="casual portrait of a Chinese man in a white shirt against a plain wall, early 2000s digital camera flash, low resolution nostalgia" />
-              </div>
-              <figcaption class="work-caption">
-                <h3>吧主</h3>
-                <p>二〇二五 · 观念摄影</p>
-              </figcaption>
-            </figure>
-
-            <figure class="work">
-              <span class="loc">威尼斯</span>
-              <div class="work-media">
-                <img loading="lazy" src="assets/work3.webp" alt="作品《绿幕英雄》" data-prompt="full body portrait on a chroma key green screen, y2k internet meme aesthetic, harsh studio lighting, VHS artifacts" />
-              </div>
-              <figcaption class="work-caption">
-                <h3>绿幕英雄</h3>
-                <p>二〇二五 · 实时影像</p>
-              </figcaption>
-            </figure>
-
-            <figure class="work">
-              <span class="loc">巴黎</span>
-              <div class="work-media">
-                <img loading="lazy" src="assets/work4.webp" alt="作品《双人PK》" data-prompt="selfie of a man and a woman in blue suits with a red bow tie, compact digital camera flash, early 2000s party snapshot" />
-              </div>
-              <figcaption class="work-caption">
-                <h3>双人PK</h3>
-                <p>二〇二四 · 数字合成</p>
-              </figcaption>
-            </figure>
-
-            <figure class="work">
-              <span class="loc">东京</span>
-              <div class="work-media">
-                <img loading="lazy" src="assets/work5.webp" alt="作品《匿名者》" data-prompt="hooded man sitting in a leather chair, dramatic red Chinese typography overlay, y2k poster aesthetic, high contrast" />
-              </div>
-              <figcaption class="work-caption">
-                <h3>匿名者</h3>
-                <p>二〇二四 · 网络影像</p>
-              </figcaption>
-            </figure>
-
-            <figure class="work">
-              <span class="loc">伦敦</span>
-              <div class="work-media">
-                <img loading="lazy" src="assets/work6.webp" alt="作品《旧闻一则》" data-prompt="vintage sepia meme photograph with bold yellow and red text, retro propaganda collage, dreamcore internet art" />
-              </div>
-              <figcaption class="work-caption">
-                <h3>旧闻一则</h3>
-                <p>二〇二三 · 拼贴摄影</p>
-              </figcaption>
-            </figure>
+        <!-- 展览经历 -->
+        <section class="window w-ex reveal" id="exhibition">
+          <div class="win-bar"><span>EXHIBITION.LOG · 展览经历</span><span class="dots"><i></i><i></i><i></i></span></div>
+          <div class="win-body">
+            <div class="sec-head">
+              <span class="sec-num">03</span>
+              <h2 class="sec-title">展览经历<span class="glitch-t" aria-hidden="true">展览经历</span></h2>
+              <span class="sec-note">按年份排列 · 海外为主</span>
+            </div>
+            <ul class="ex-list">
+              <li class="ex-row"><span class="ex-year">2026</span><span class="ex-title">夢核網咖<span class="ex-type">个展</span></span><span class="ex-venue">柏林 · 十字山地下画廊</span></li>
+              <li class="ex-row"><span class="ex-year">2025</span><span class="ex-title">抽象的信号<span class="ex-type">群展</span></span><span class="ex-venue">纽约 · 切尔西九号空间</span></li>
+              <li class="ex-row"><span class="ex-year">2025</span><span class="ex-title">绿幕之后<span class="ex-type">双人展</span></span><span class="ex-venue">威尼斯 · 军械库</span></li>
+              <li class="ex-row"><span class="ex-year">2024</span><span class="ex-title">夢到啥說啥<span class="ex-type">个展</span></span><span class="ex-venue">东京 · 涩谷影像中心</span></li>
+              <li class="ex-row"><span class="ex-year">2024</span><span class="ex-title">像素与眼泪<span class="ex-type">群展</span></span><span class="ex-venue">巴黎 · 玛黑区</span></li>
+              <li class="ex-row"><span class="ex-year">2023</span><span class="ex-title">孙吧之夜<span class="ex-type">特别项目</span></span><span class="ex-venue">首尔 · 弘大艺术中心</span></li>
+              <li class="ex-row"><span class="ex-year">2023</span><span class="ex-title">首届网络美学展<span class="ex-type">群展</span></span><span class="ex-venue">伦敦 · 东区仓库</span></li>
+              <li class="ex-row"><span class="ex-year">2022</span><span class="ex-title">地下室联展<span class="ex-type">群展</span></span><span class="ex-venue">天津 · 老城厢</span></li>
+            </ul>
           </div>
-        </div>
-      </div>
-    </section>
+        </section>
 
-    <!-- 展览经历 -->
-    <section class="section" id="exhibition">
-      <div class="window reveal">
-        <div class="win-bar">
-          <span>展览经历 · 海外为主</span>
-          <span class="win-dots"><i></i><i></i><i></i></span>
-          <span>二〇二二 — 二〇二六</span>
-        </div>
-        <div class="win-body">
-          <div class="sec-head">
-            <span class="sec-num">03</span>
-            <h2 class="sec-title">展览经历</h2>
-            <span class="sec-note">按年份排列 · 夢遊足跡</span>
+        <!-- 留言板 -->
+        <section class="window w-gb reveal" id="guestbook">
+          <div class="win-bar"><span>GUESTBOOK.TXT · 留言板</span><span class="dots"><i></i><i></i><i></i></span></div>
+          <div class="win-body">
+            <div class="sec-head">
+              <span class="sec-num">04</span>
+              <h2 class="sec-title">留言板<span class="glitch-t" aria-hidden="true">留言板</span></h2>
+              <span class="sec-note">踩踩不跑堂 · 留言必回</span>
+            </div>
+            <form class="gb-form" id="gbForm">
+              <input type="text" id="gbName" maxlength="12" placeholder="你的网名（必填）" required />
+              <textarea id="gbMsg" rows="3" maxlength="200" placeholder="写点什么吧，梦回 2008……（必填）" required></textarea>
+              <button class="gb-submit" type="submit">提交留言</button>
+            </form>
+            <div class="gb-list" id="gbList"></div>
           </div>
-
-          <ul class="ex-list">
-            <li class="ex-row">
-              <span class="ex-year">二〇二六</span>
-              <span class="ex-title">夢核檔案<span class="ex-type">个展</span></span>
-              <span class="ex-venue">柏林 · 十字山地下画廊</span>
-            </li>
-            <li class="ex-row">
-              <span class="ex-year">二〇二五</span>
-              <span class="ex-title">抽象的信号<span class="ex-type">群展</span></span>
-              <span class="ex-venue">纽约 · 切尔西九号空间</span>
-            </li>
-            <li class="ex-row">
-              <span class="ex-year">二〇二五</span>
-              <span class="ex-title">绿幕之后<span class="ex-type">双人展</span></span>
-              <span class="ex-venue">威尼斯 · 军械库</span>
-            </li>
-            <li class="ex-row">
-              <span class="ex-year">二〇二四</span>
-              <span class="ex-title">夢到啥說啥<span class="ex-type">个展</span></span>
-              <span class="ex-venue">东京 · 涩谷影像中心</span>
-            </li>
-            <li class="ex-row">
-              <span class="ex-year">二〇二四</span>
-              <span class="ex-title">像素与眼泪<span class="ex-type">群展</span></span>
-              <span class="ex-venue">巴黎 · 玛黑区</span>
-            </li>
-            <li class="ex-row">
-              <span class="ex-year">二〇二三</span>
-              <span class="ex-title">孙吧之夜<span class="ex-type">特别项目</span></span>
-              <span class="ex-venue">首尔 · 弘大艺术中心</span>
-            </li>
-            <li class="ex-row">
-              <span class="ex-year">二〇二三</span>
-              <span class="ex-title">首届网络美学展<span class="ex-type">群展</span></span>
-              <span class="ex-venue">伦敦 · 东区仓库</span>
-            </li>
-            <li class="ex-row">
-              <span class="ex-year">二〇二二</span>
-              <span class="ex-title">地下室联展<span class="ex-type">群展</span></span>
-              <span class="ex-venue">天津 · 老城厢</span>
-            </li>
-          </ul>
-        </div>
+        </section>
       </div>
-    </section>
+    </div>
   </main>
 
   <!-- 页脚 -->
   <footer class="footer" id="contact">
     <div class="footer-inner">
       <span class="footer-label">联系方式</span>
-
       <a class="footer-mail" href="mailto:1840979648@qq.com">1840979648@qq.com</a>
-
       <div class="footer-social">
         <a href="#">微博</a>
         <a href="#">小红书</a>
         <a href="#">百度贴吧</a>
         <a href="#">哔哩哔哩</a>
       </div>
-
       <div class="footer-meta">
-        <span>© 二〇二六 曹林泽 · 夢核工作室</span>
-        <span class="counter">第 0008848 位夢遊者</span>
-        <span>本站最佳浏览分辨率 1024 × 768</span>
+        <span>© 二〇二六 曹林泽 · 夢核網咖</span>
+        <span class="counter">第 0008848 位梦游者</span>
+        <span>最佳浏览分辨率 1024 × 768</span>
         <a href="#top">回到顶部 ↑</a>
       </div>
     </div>
   </footer>
 
-  <!-- 背景音乐 -->
+  <!-- 假蓝屏 -->
+  <div class="bsod" id="bsod" aria-hidden="true">
+    <span class="bsod-title">DREAM_ENGINE</span>
+    <div id="bsodText"></div>
+    <small>按任意键继续 _</small>
+  </div>
+
+  <!-- 音乐按钮 -->
   <button class="music hint" id="musicBtn" type="button" aria-label="背景音乐开关">
     <span class="note">♫</span>
     <span id="musicLabel">点硪播放</span>
@@ -1266,20 +891,17 @@
   </button>
 
   <script>
-    // 背景音乐
+    /* ================= 背景音乐 ================= */
     const audio = document.getElementById('bgm');
     const musicBtn = document.getElementById('musicBtn');
     const musicLabel = document.getElementById('musicLabel');
     let userPaused = false;
-
     audio.volume = 0.15;
-
     function musicUI(on, hint) {
       musicBtn.classList.toggle('playing', on);
       musicBtn.classList.toggle('hint', !!hint);
       musicLabel.textContent = on ? '背景音乐 · 开' : (userPaused ? '背景音乐 · 关' : '点硪播放');
     }
-
     function tryPlay() {
       if (userPaused) return;
       const p = audio.play();
@@ -1287,63 +909,321 @@
         p.then(() => musicUI(true, false)).catch(() => musicUI(false, true));
       }
     }
-
     musicBtn.addEventListener('click', () => {
-      if (audio.paused) {
-        userPaused = false;
-        tryPlay();
-      } else {
-        audio.pause();
-        userPaused = true;
-        musicUI(false, false);
-      }
+      if (audio.paused) { userPaused = false; tryPlay(); }
+      else { audio.pause(); userPaused = true; musicUI(false, false); }
     });
-
-    // 浏览器禁止自动播放，首次交互后以低音量开始；延后执行，避免与按钮点击互相覆盖
     document.addEventListener('pointerdown', function () {
-      setTimeout(function () {
-        if (!userPaused && audio.paused) tryPlay();
-      }, 0);
+      setTimeout(() => { if (!userPaused && audio.paused) tryPlay(); }, 0);
     }, { once: true });
-
     tryPlay();
 
-    // 滚动入场
+    /* ================= 打字机副标题 ================= */
+    const subText = '工艺美术最忠诚的狗，纯血河南人，fps孝子，孙吧吧主';
+    const typedEl = document.getElementById('typedText');
+    let typeIdx = 0;
+    setTimeout(function typeNext() {
+      if (typeIdx <= subText.length) {
+        typedEl.textContent = subText.slice(0, typeIdx++);
+        setTimeout(typeNext, 120);
+      }
+    }, 900);
+
+    /* ================= 首屏时钟 ================= */
+    const clockEl = document.getElementById('clock');
+    function tickClock() {
+      const d = new Date();
+      clockEl.textContent = [d.getHours(), d.getMinutes(), d.getSeconds()].map((n) => String(n).padStart(2, '0')).join(':');
+    }
+    tickClock(); setInterval(tickClock, 1000);
+
+    /* ================= 鼠标星尘尾迹 ================= */
+    const moteChars = ['✦', '✧', '★', '☆', '·'];
+    const moteColors = ['#FF4FB8', '#4FF2FF', '#FFE94A', '#8CFF4F', '#FF9E2C'];
+    let lastMote = 0;
+    document.addEventListener('mousemove', (e) => {
+      const now = Date.now();
+      if (now - lastMote < 55) return;
+      lastMote = now;
+      const m = document.createElement('div');
+      m.className = 'mote';
+      m.textContent = moteChars[Math.floor(Math.random() * moteChars.length)];
+      m.style.cssText = `left:${e.clientX + (Math.random() * 16 - 8)}px;top:${e.clientY + (Math.random() * 16 - 8)}px;font-size:${7 + Math.random() * 9}px;color:${moteColors[Math.floor(Math.random() * moteColors.length)]};text-shadow:0 0 8px currentColor;`;
+      document.body.appendChild(m);
+      m.addEventListener('animationend', () => m.remove());
+    });
+
+    /* ================= HUD ================= */
+    const hudX = document.getElementById('hudX');
+    const hudY = document.getElementById('hudY');
+    const hudFps = document.getElementById('hudFps');
+    document.addEventListener('mousemove', (e) => {
+      hudX.textContent = String(e.clientX).padStart(4, '0');
+      hudY.textContent = String(e.clientY).padStart(4, '0');
+    });
+    setInterval(() => { hudFps.textContent = 57 + Math.floor(Math.random() * 7); }, 700);
+
+    /* ================= 头像贴纸语录 ================= */
+    const quotes = ['梦到啥说啥。', '醒了再说。', '今晚打枪，来不来？', '吧务繁忙。', '多喝热水。', '冲冲冲！', '回踩哦亲~', '偶稀饭你！', '= .= 看啥看', '886'];
+    document.querySelectorAll('.sticker').forEach((st) => {
+      st.addEventListener('click', () => {
+        st.querySelectorAll('.quote-bubble').forEach((b) => b.remove());
+        st.classList.remove('bounce'); void st.offsetWidth; st.classList.add('bounce');
+        const b = document.createElement('div');
+        b.className = 'quote-bubble';
+        b.textContent = quotes[Math.floor(Math.random() * quotes.length)];
+        st.appendChild(b);
+        setTimeout(() => b.remove(), 1900);
+      });
+    });
+
+    /* ================= 作品弹窗（可拖拽，可多开） ================= */
+    const WORKS = [
+      { title: '笑着说再见', meta: '二〇二六 · 数字影像 · 柏林', img: 'assets/work1.jpg', desc: '把一张笑脸交给时间，看它逐帧失真、褪色、重演。' },
+      { title: '吧主', meta: '二〇二五 · 观念摄影 · 纽约', img: 'assets/work2.webp', desc: '权力很小，墙很白，快门按下的那一刻他就是吧主。' },
+      { title: '绿幕英雄', meta: '二〇二五 · 实时影像 · 威尼斯', img: 'assets/work3.webp', desc: '绿幕之前人人平等，绿幕之后英雄延迟三秒登场。' },
+      { title: '双人PK', meta: '二〇二四 · 数字合成 · 巴黎', img: 'assets/work4.webp', desc: '一场没有输家的对战，比分定格在梦开始的地方。' },
+      { title: '匿名者', meta: '二〇二四 · 网络影像 · 东京', img: 'assets/work5.webp', desc: '帽子压得很低，信号传得很远。' },
+      { title: '旧闻一则', meta: '二〇二三 · 拼贴摄影 · 伦敦', img: 'assets/work6.webp', desc: '旧报纸上的新闻还没发生，先别急着相信。' }
+    ];
+    let winZ = 800;
+    function openWork(i) {
+      const w = WORKS[i];
+      const win = document.createElement('div');
+      win.className = 'modal-win';
+      win.style.left = (window.innerWidth / 2 - 210 + (Math.random() * 80 - 40)) + 'px';
+      win.style.top = (90 + Math.random() * 60) + 'px';
+      win.style.zIndex = ++winZ;
+      win.innerHTML = `
+        <div class="modal-bar"><span>VIEW_${String(i).padStart(2, '0')}.BSP</span><button class="modal-close" type="button" aria-label="关闭">×</button></div>
+        <div class="modal-body">
+          <img src="${w.img}" alt="${w.title}" />
+          <div class="modal-info"><h4>《${w.title}》</h4><p>${w.meta}</p><p>${w.desc}</p></div>
+        </div>`;
+      document.body.appendChild(win);
+      win.querySelector('.modal-close').addEventListener('click', () => win.remove());
+      win.addEventListener('pointerdown', () => { win.style.zIndex = ++winZ; });
+      const bar = win.querySelector('.modal-bar');
+      bar.addEventListener('pointerdown', (e) => {
+        if (e.target.classList.contains('modal-close')) return;
+        const rect = win.getBoundingClientRect();
+        const dx = e.clientX - rect.left, dy = e.clientY - rect.top;
+        function move(ev) {
+          win.style.left = Math.max(0, Math.min(window.innerWidth - 80, ev.clientX - dx)) + 'px';
+          win.style.top = Math.max(0, Math.min(window.innerHeight - 40, ev.clientY - dy)) + 'px';
+        }
+        function up() {
+          document.removeEventListener('pointermove', move);
+          document.removeEventListener('pointerup', up);
+        }
+        document.addEventListener('pointermove', move);
+        document.addEventListener('pointerup', up);
+      });
+    }
+    document.querySelectorAll('.work').forEach((el) => {
+      el.addEventListener('click', () => openWork(+el.dataset.work));
+    });
+
+    /* ================= 弹幕：火星文 + 古早QQ腔 ================= */
+    const dmTexts = [
+      '偶来踩踩 ∠( ᐛ 」∠)_', '回踩哦亲~', '┈━═☆ 沙发', '酱紫啊', '稀饭泥的空间',
+      '顶一个 d(ﾟ∀ﾟd)', '886', 'GGMM快来', 'Orz 跪了', '= .=', '踩踩不跑堂',
+      'づ￣ ³￣)づ 么么哒', '火星文来咯', 'o(≧v≦)o 好棒', '→_→', '←_←',
+      '互踩空间+1', '今天也是元气满满呢', '囧rz', '表酱紫嘛', '虾米情况',
+      '偶滴神呀', '雷到偶了', '汗 =_=|||', '晕死', '顶你个肺', '路过~',
+      '楼主干巴爹', '前排出售瓜子', '火钳刘明', '╰(￣▽￣)╭'
+    ];
+    const dmColors = ['#FF4FB8', '#4FF2FF', '#FFE94A', '#8CFF4F', '#FF9E2C', '#C9A0FF'];
+    const dmLayer = document.getElementById('danmakuLayer');
+    const dmToggle = document.getElementById('danmakuToggle');
+    let dmOn = true;
+    function spawnDm() {
+      if (!dmOn || document.hidden) return;
+      const d = document.createElement('div');
+      d.className = 'danmaku-item';
+      d.textContent = dmTexts[Math.floor(Math.random() * dmTexts.length)];
+      d.style.top = (8 + Math.random() * 55) + '%';
+      d.style.color = dmColors[Math.floor(Math.random() * dmColors.length)];
+      d.style.fontSize = (13 + Math.random() * 7) + 'px';
+      d.style.animationDuration = (8 + Math.random() * 6) + 's';
+      dmLayer.appendChild(d);
+      d.addEventListener('animationend', () => d.remove());
+    }
+    setInterval(spawnDm, 2200);
+    spawnDm();
+    dmToggle.addEventListener('click', () => {
+      dmOn = !dmOn;
+      dmToggle.textContent = dmOn ? '弹幕：开' : '弹幕：关';
+      if (!dmOn) dmLayer.innerHTML = '';
+    });
+
+    /* ================= 留言板 ================= */
+    const GB_KEY = 'clz_guestbook_v1';
+    const gbList = document.getElementById('gbList');
+    const nameColors = ['#FFE94A', '#4FF2FF', '#FF9E2C', '#8CFF4F', '#FF4FB8'];
+    function loadGb() { try { return JSON.parse(localStorage.getItem(GB_KEY)) || []; } catch (e) { return []; } }
+    function saveGb(arr) { localStorage.setItem(GB_KEY, JSON.stringify(arr.slice(0, 50))); }
+    function renderGb() {
+      const arr = loadGb();
+      if (!arr.length) { gbList.innerHTML = '<p class="gb-empty">// 还没有留言，来抢沙发 ┈━═☆</p>'; return; }
+      gbList.innerHTML = arr.map((it) => `
+        <div class="gb-item">
+          <div class="gb-meta"><span class="gb-name" style="color:${it.color}">${escapeHtml(it.name)}</span>${it.time}</div>
+          <div>${escapeHtml(it.msg)}</div>
+        </div>`).join('');
+    }
+    function escapeHtml(s) {
+      return s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+    document.getElementById('gbForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('gbName').value.trim();
+      const msg = document.getElementById('gbMsg').value.trim();
+      if (!name || !msg) return;
+      const arr = loadGb();
+      const now = new Date();
+      arr.unshift({
+        name, msg,
+        color: nameColors[Math.floor(Math.random() * nameColors.length)],
+        time: `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`
+      });
+      saveGb(arr); renderGb();
+      e.target.reset();
+    });
+    renderGb();
+
+    /* ================= Konami 秘籍：头像雨 ================= */
+    const seq = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+    let prog = 0;
+    document.addEventListener('keydown', (e) => {
+      const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+      prog = (k === seq[prog]) ? prog + 1 : (k === seq[0] ? 1 : 0);
+      if (prog === seq.length) { prog = 0; headRain(); }
+    });
+    function headRain() {
+      const toast = document.createElement('div');
+      toast.className = 'toast'; toast.textContent = '秘籍发动 · 孙哥降临';
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 1800);
+      for (let i = 0; i < 30; i++) {
+        setTimeout(() => {
+          const h = document.createElement('img');
+          h.src = 'assets/head.png'; h.className = 'rain-head'; h.alt = '';
+          const size = 46 + Math.random() * 70;
+          h.style.cssText = `left:${Math.random() * 96}vw;width:${size}px;animation-duration:${2.6 + Math.random() * 2.4}s;`;
+          document.body.appendChild(h);
+          h.addEventListener('animationend', () => h.remove());
+        }, i * 90);
+      }
+    }
+
+    /* ================= 假蓝屏 ================= */
+    const bsod = document.getElementById('bsod');
+    const bsodText = document.getElementById('bsodText');
+    let bsodBusy = false;
+    const bsodLines = [
+      '*** STOP: 0x00000848 (DREAM_NOT_FOUND, 0x2008, 0xDEADBEEF, 0x00000000)',
+      '',
+      '夢核網咖遇到问题，需要关闭。你的梦已被安全保存。',
+      '正在收集错误信息…… 请勿关闭电源。',
+      '',
+      '技术信息：孙哥 is watching you.'
+    ];
+    function showBsod() {
+      if (bsodBusy) return; bsodBusy = true;
+      bsod.classList.add('show'); bsodText.textContent = '';
+      let li = 0;
+      const t = setInterval(() => {
+        if (li < bsodLines.length) { bsodText.textContent += bsodLines[li++] + '\n'; }
+        else clearInterval(t);
+      }, 240);
+      setTimeout(hideBsod, 5200);
+    }
+    function hideBsod() { bsod.classList.remove('show'); bsodBusy = false; }
+    bsod.addEventListener('click', hideBsod);
+    document.getElementById('counterBox').addEventListener('click', showBsod);
+
+    /* ================= 滚动入场 ================= */
     const revealEls = document.querySelectorAll('.reveal');
     if ('IntersectionObserver' in window) {
       const io = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-            io.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.08, rootMargin: '0px 0px -6% 0px' });
+        entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('is-visible'); io.unobserve(en.target); } });
+      }, { threshold: 0.06, rootMargin: '0px 0px -5% 0px' });
       revealEls.forEach((el) => io.observe(el));
-    } else {
-      revealEls.forEach((el) => el.classList.add('is-visible'));
-    }
+    } else { revealEls.forEach((el) => el.classList.add('is-visible')); }
 
-    // 导航高亮
-    const navLinks = [...document.querySelectorAll('.nav-links a')];
-    const sections = navLinks
-      .map((link) => document.querySelector(link.getAttribute('href')))
-      .filter(Boolean);
+    /* ================= 穿越之门 ================= */
+    (function () {
+      const portal = document.getElementById('portal');
+      if (!portal) return;
+      const bgm = document.getElementById('bgm');
+      const KEY = 'clz_traveled';
+      function release() {
+        portal.style.transition = 'opacity .8s ease, transform .8s ease';
+        portal.style.opacity = '0';
+        portal.style.transform = 'scale(1.06)';
+        document.body.classList.remove('portal-lock');
+        try { sessionStorage.setItem(KEY, '1'); } catch (e) {}
+        try { bgm.play().catch(() => {}); } catch (e) {}
+        setTimeout(() => portal.remove(), 850);
+      }
+      try { if (sessionStorage.getItem(KEY)) { portal.remove(); return; } } catch (e) {}
+      document.body.classList.add('portal-lock');
 
-    function setActive() {
-      const pos = window.scrollY + window.innerHeight * 0.32;
-      let current = null;
-      sections.forEach((sec) => {
-        if (sec.offsetTop <= pos) current = sec;
+      const task = document.getElementById('pStepTask');
+      const done = document.getElementById('pStepDone');
+      const err = document.getElementById('pErr');
+      const win = document.getElementById('pWindow');
+      const range = document.getElementById('pRange');
+      const big = document.getElementById('pBigYear');
+      const yearNow = document.getElementById('pYear');
+      const snow = document.getElementById('pSnow');
+      const loadText = document.getElementById('pLoadText');
+      const barIn = document.getElementById('pBarIn');
+      const pct = document.getElementById('pPct');
+      let tries = 0;
+      const errs = ['年份弹回来了！用力拉到底。', '时间机器卡住了，再拉一次。', '2008 在拉杆的最左边，别停。', '差一点点，夢核年代就在眼前。'];
+
+      function runLoad() {
+        const msgs = ['正在拨号…… 56k', '正在连接夢核市服务器……', '正在加载 2008 年的网速……', '正在唤醒孙哥……', '加载完成，欢迎回家。'];
+        let p = 0;
+        const timer = setInterval(() => {
+          p += 2 + Math.random() * 5;
+          if (p >= 100) { p = 100; clearInterval(timer); setTimeout(release, 500); }
+          barIn.style.width = p + '%';
+          pct.textContent = Math.floor(p) + '%';
+          loadText.textContent = msgs[Math.min(msgs.length - 1, Math.floor(p / 21))];
+        }, 110);
+      }
+
+      function succeed() {
+        snow.classList.add('on');
+        big.classList.add('spin');
+        range.disabled = true;
+        err.textContent = '';
+        const flick = setInterval(() => { big.textContent = String(2008 + Math.floor(Math.random() * 19)); }, 50);
+        setTimeout(() => {
+          clearInterval(flick);
+          big.textContent = '2008';
+          snow.classList.remove('on');
+          big.classList.remove('spin');
+          task.hidden = true; done.hidden = false; runLoad();
+        }, 1000);
+      }
+
+      range.addEventListener('input', () => { big.textContent = range.value; yearNow.textContent = range.value; });
+      range.addEventListener('change', () => {
+        if (+range.value <= 2008) { succeed(); return; }
+        err.textContent = '✖ ' + errs[tries++ % errs.length];
+        win.classList.remove('shake'); void win.offsetWidth; win.classList.add('shake');
+        const back = setInterval(() => {
+          range.value = +range.value + 1;
+          big.textContent = range.value; yearNow.textContent = range.value;
+          if (+range.value >= 2026) clearInterval(back);
+        }, 28);
       });
-      navLinks.forEach((link) => {
-        link.classList.toggle('active', !!current && link.getAttribute('href') === '#' + current.id);
-      });
-    }
-
-    setActive();
-    window.addEventListener('scroll', setActive, { passive: true });
-    window.addEventListener('resize', setActive);
+      document.getElementById('pSkip').addEventListener('click', () => { task.hidden = true; done.hidden = false; runLoad(); });
+    })();
   </script>
 </body>
 </html>
